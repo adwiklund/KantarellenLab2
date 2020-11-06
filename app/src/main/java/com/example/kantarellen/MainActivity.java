@@ -1,38 +1,28 @@
 package com.example.kantarellen;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.text.InputType;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     private String m_Text = "";
+    MapPopup mapPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mapPopup = new MapPopup();
 
         listView = (ListView) findViewById(R.id.mobile_list);
 
@@ -103,6 +96,13 @@ public class MainActivity extends AppCompatActivity {
 
         //final mapPopup popup = new mapPopup();
 
+
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+       // SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,9 +125,15 @@ public class MainActivity extends AppCompatActivity {
                         if (inventory.contains(m_Text)) {
                             shoppinglist.add(m_Text);
                         } else {
+                            //int i = mapPopup.showMapPopup(MainActivity.this);
+                            //int i = showMapPopup();
                             mapPopup.showMapPopup(MainActivity.this);
+                            //System.out.println("i = " + i);
+                            //editor.putInt(m_Text, i);
+                            //editor.apply();
                             inventory.add(m_Text);
                             shoppinglist.add(m_Text);
+
                         }
 
                     }
@@ -146,19 +152,18 @@ public class MainActivity extends AppCompatActivity {
                  */
             }
         });
+
+        //int defaultValue = getResources().getInteger(0);
+        int highScore = sharedPref.getInt(getString(R.string.preference_file_key), 0);
+
+        System.out.println("test = " + highScore);
     }
-
-    Map<String,Integer> getDict(int keyId, int valId) {
-        String[] keys = getResources().getStringArray(keyId);
-        int[] values = getResources().getIntArray(valId);
-
-        Map<String,Integer> dict = new HashMap<String,Integer>();
-        for (int i = 0, l = keys.length; i < l; i++) {
-            dict.put(keys[i], values[i]);
-        }
-
-        return dict;
+    /*
+    public void showMapPopup() {
+        return mapPopup.showMapPopup();
     }
+    */
+
     /*
     private void showMapPopup(final Activity context)
     {
@@ -216,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.action_categories) {
+            Intent activity2Intent = new Intent(getApplicationContext(), CategoryActivity.class);
+            startActivity(activity2Intent);
             return true;
         }
 

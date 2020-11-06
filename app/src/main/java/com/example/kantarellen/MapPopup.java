@@ -10,18 +10,24 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class mapPopup {
+public class MapPopup {
 
     private static PopupWindow mapLayout;
+    //private int shelfId;
+    final int[] shelfId = new int[1];
 
-    public mapPopup(PopupWindow mapLayout) {
+    public MapPopup(PopupWindow mapLayout) {
         this.mapLayout = mapLayout;
     }
 
-    static void showMapPopup(final Activity context)
+    public MapPopup() {
+
+    }
+
+
+    public void showMapPopup(final Activity context)
     {
         // Inflate the popup_layout.xml
         ConstraintLayout viewGroup = (ConstraintLayout) context.findViewById(R.id.maplayout);
@@ -54,20 +60,29 @@ public class mapPopup {
         three.setOnClickListener(this);
 
          */
-
+        //int shelfId;
 
         // Getting a reference to Close button, and close the popup when clicked.
+        //int shelfId = 0;
 
         Button close = (Button) layout.findViewById(R.id.button);
         close.setOnClickListener(new View.OnClickListener() {
 
+
             @Override
             public void onClick(View v) {
+                shelfId[0] = 1;
+                System.out.println("shelfId[0] = " + shelfId[0]);
+                setShelf(shelfId[0]);
                 mapLayout.dismiss();
             }
         });
 
+        //System.out.println("shelfid =" + shelfId[0]);
+        //return shelfId[0];
+    }
 
+    public void setShelf(int shelfId) {
 
     }
     /*
