@@ -38,7 +38,7 @@ public class ItemMoveCallback extends ItemTouchHelper.Callback {
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                           RecyclerView.ViewHolder target) {
         mAdapter.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        
+
         return true;
     }
 

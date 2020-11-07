@@ -33,6 +33,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         this.data = data;
     }
 
+    public void setData(ArrayList<String> data) {
+        this.data = data;
+    }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_row, parent, false);
