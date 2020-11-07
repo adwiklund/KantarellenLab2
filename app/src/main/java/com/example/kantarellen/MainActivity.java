@@ -228,6 +228,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(activity2Intent);
             return true;
         }
+        if(id == R.id.action_recipes) {
+            Intent activity2Intent = new Intent(getApplicationContext(), RecipeActivity.class);
+            startActivity(activity2Intent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }

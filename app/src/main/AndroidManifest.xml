@@ -10,6 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".CategoryActivity"></activity>
+        <activity android:name=".RecipeActivity"></activity>
         <activity android:name=".MapPopupActivity" />
         <activity android:name=".MyListActivity" />
         <activity

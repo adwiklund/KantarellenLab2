@@ -62,23 +62,14 @@ public class CategoryActivity extends AppCompatActivity {
             }
         });
 
-
-            /*
-            @Override
-            public void onClick(View view) {
-                addCategory("Ny Kategori");
-                updateCategories();
-            }
-        });
-             */
-
         recyclerView = findViewById(R.id.recyclerView);
 
         populateRecyclerView();
-        //updateCategories();
     }
 
     private void populateRecyclerView() {
+
+
         categoryArrayList.add("Frukt & Grönt");
         categoryArrayList.add("Fisk");
         categoryArrayList.add("Kött");
@@ -89,7 +80,7 @@ public class CategoryActivity extends AppCompatActivity {
         categoryArrayList.add("Snacks");
         categoryArrayList.add("Barnprodukter");
         categoryArrayList.add("Kaffe & Te");
-        //updateCategories();
+
 
         mAdapter = new CategoryAdapter(categoryArrayList);
 
@@ -100,42 +91,9 @@ public class CategoryActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(mAdapter);
 
-        /*
-        mAdapter = new CategoryAdapter(categoryArrayList);
-
-        ItemTouchHelper.Callback callback =
-                new ItemMoveCallback(mAdapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
-        //System.out.println("test = " + categoryArrayList.get(0));
-        //System.out.println("count = " + mAdapter.getItemCount());
-
-        recyclerView.setAdapter(mAdapter);
-
-         */
     }
-    /*
-    private void updateCategories() {
-        mAdapter.setData();
-
-        
-        ItemTouchHelper.Callback callback =
-                new ItemMoveCallback(mAdapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-        touchHelper.attachToRecyclerView(recyclerView);
-
-
-
-        //System.out.println("test = " + categoryArrayList.get(0));
-        //System.out.println("count = " + mAdapter.getItemCount());
-
-        recyclerView.setAdapter(mAdapter);
-    }
-    */
 
     public void addCategory(String newCategory) {
-
         categoryArrayList.add(newCategory);
         mAdapter.setData(categoryArrayList);
         recyclerView.setAdapter(mAdapter);
