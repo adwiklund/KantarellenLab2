@@ -1,6 +1,7 @@
 package com.example.kantarellen;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+//http://www.technotalkative.com/android-gridview-example/
+
 public class RecipeAdapter extends BaseAdapter
 {
     private ArrayList<String> listRecipe;
-    private ArrayList<Integer> listRecipePicture;
+    private ArrayList<Bitmap> listRecipePicture;
     private Activity activity;
 
-    public RecipeAdapter(Activity activity, ArrayList<String> listRecipe, ArrayList<Integer> listRecipePicture) {
+    public RecipeAdapter(Activity activity, ArrayList<String> listRecipe, ArrayList<Bitmap> listRecipePicture) {
         super();
         this.listRecipe = listRecipe;
         this.listRecipePicture = listRecipePicture;
@@ -65,7 +68,9 @@ public class RecipeAdapter extends BaseAdapter
         }
 
         view.txtViewTitle.setText(listRecipe.get(position));
-        view.imgViewFlag.setImageResource(listRecipePicture.get(position));
+
+        //view.imgViewFlag.setImageResource(listRecipePicture.get(position));
+        view.imgViewFlag.setImageBitmap(listRecipePicture.get(position));
 
         return convertView;
     }

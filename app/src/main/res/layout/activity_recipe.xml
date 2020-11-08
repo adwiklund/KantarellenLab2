@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <GridView
-        android:layout_height="wrap_content"
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
-        android:numColumns="auto_fit"
+        android:layout_height="match_parent"
         android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp">
-    </GridView>
-</LinearLayout>
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"></GridView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/newRecipeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_menu_add" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
