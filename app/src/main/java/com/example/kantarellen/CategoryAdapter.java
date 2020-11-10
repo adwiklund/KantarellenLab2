@@ -11,10 +11,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+
+import io.realm.Realm;
+
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
 
     private ArrayList<String> data;
+    Realm realm;
+
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -57,15 +66,33 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
     @Override
     public void onRowMoved(int fromPosition, int toPosition) {
+        realm = Realm.getDefaultInstance();
+        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        
+        System.out.println("position before = " + categories.get(fromPosition).getPosition());
+        System.out.println("position before = " + categories.get(toPosition).getPosition());
+
+        realm.executeTransaction(r -> {
+            categories.get(toPosition).setPosition(fromPosition);
+            categories.get(fromPosition).setPosition(toPosition);
+        });
+
+        System.out.println("position after = " + categories.get(fromPosition).getPosition());
+        System.out.println("position after = " + categories.get(toPosition).getPosition());
+
+
+
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(data, i, i + 1);
+
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(data, i, i - 1);
             }
         }
+
         notifyItemMoved(fromPosition, toPosition);
     }
 

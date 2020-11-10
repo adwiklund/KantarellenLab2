@@ -12,4 +12,5 @@
     <string name="preference_file_key" />
     <string name="action_categories">Categories</string>
     <string name="action_recipes">Recipes</string>
+    <string name="action_shoppinglist">Shopping List</string>
 </resources>

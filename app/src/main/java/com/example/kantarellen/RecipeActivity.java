@@ -267,7 +267,9 @@ public class RecipeActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_shoppinglist) {
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent);
             return true;
         }
         if (id == R.id.action_categories) {

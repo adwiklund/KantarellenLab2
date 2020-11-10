@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -22,17 +23,36 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.realm.OrderedRealmCollectionChangeListener;
+import io.realm.Realm;
+import io.realm.RealmChangeListener;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     private String m_Text = "";
     MapPopup mapPopup;
+    Realm realm;
+    private RealmResults<Category> categories;
+    //RealmChangeListener realmChangeListener;
+
+    private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
+        String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());
+        String deletions = changeSet.getDeletions().length == 0 ? "" : "\n - Deletions: " + Arrays.toString(changeSet.getDeletions());
+        String changes = changeSet.getChanges().length == 0 ? "" : "\n - Changes: " + Arrays.toString(changeSet.getChanges());
+
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +60,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Realm.init(this);
+        Realm.deleteRealm(Realm.getDefaultConfiguration());
+
+        RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
+
+
+        realm = Realm.getInstance(config);
+        //realm = Realm.getDefaultInstance();
+
+        setupCategories();
+
+
+        /*
+        realm.executeTransaction(r -> {
+            Category category = r.createObject(Category.class, 1);
+            category.setCategoryName("Frukt");
+
+            Category category1 = r.createObject(Category.class, 2);
+            category1.setCategoryName("Kött");
+
+        });
+
+         */
+
+        categories = realm.where(Category.class).findAllAsync();
+        categories.addChangeListener(realmChangeListener);
+
+        RealmResults<Category> results = realm.where(Category.class).findAll();
+        System.out.println("test = " + results.size());
 
         mapPopup = new MapPopup();
 
@@ -80,10 +130,16 @@ public class MainActivity extends AppCompatActivity {
 
                 // ListView Clicked item value
                 //String  itemValue    = (String) listView.getItemAtPosition(position);
-
-
                 TextView row = (TextView) view;
-                row.setPaintFlags(row.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                //System.out.println("flag = " + row.getPaintFlags());
+
+                if(row.getPaintFlags() == 0 || row.getPaintFlags() == 1281) {
+                    row.setPaintFlags(row.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                } else {
+                    row.setPaintFlags(0);
+                }
+
+                //row.setPaintFlags(row.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 //parent.getChildAt(itemPosition).setBackgroundColor(Color.GREEN);
 
 
@@ -103,6 +159,10 @@ public class MainActivity extends AppCompatActivity {
        // SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPref.edit();
 
+        CategoryActivity categoryActivity = new CategoryActivity();
+        final ArrayList<String> categoryArrayList = categoryActivity.getCategoryArrayList();
+
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +173,6 @@ public class MainActivity extends AppCompatActivity {
 
                 // Set up the input
                 final EditText input = new EditText(MainActivity.this);
-                // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
                 input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
                 builder.setView(input);
 
@@ -127,7 +186,16 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             //int i = mapPopup.showMapPopup(MainActivity.this);
                             //int i = showMapPopup();
-                            mapPopup.showMapPopup(MainActivity.this);
+                            //mapPopup.showMapPopup(MainActivity.this);
+                            /*
+                            PopupMenu menu = new PopupMenu(MainActivity.this, view);
+                            for(int i = 0; i < categoryArrayList.size(); i++) {
+                                menu.getMenu().add(categoryArrayList.get(i));
+                            }
+                            menu.show();
+
+                             */
+
                             //System.out.println("i = " + i);
                             //editor.putInt(m_Text, i);
                             //editor.apply();
@@ -146,64 +214,51 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 builder.show();
-                /*
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                 */
+
             }
         });
 
         //int defaultValue = getResources().getInteger(0);
         int highScore = sharedPref.getInt(getString(R.string.preference_file_key), 0);
 
-        System.out.println("test = " + highScore);
+        //System.out.println("test = " + highScore);
     }
-    /*
-    public void showMapPopup() {
-        return mapPopup.showMapPopup();
-    }
-    */
-
-    /*
-    private void showMapPopup(final Activity context)
-    {
-        // Inflate the popup_layout.xml
-        ConstraintLayout viewGroup = (ConstraintLayout) context.findViewById(R.id.maplayout);
-        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = layoutInflater.inflate(R.layout.map_layout, viewGroup);
-
-        // Creating the PopupWindow
-        final PopupWindow mapLayout = new PopupWindow(context);
-        mapLayout.setContentView(layout);
-        mapLayout.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-        mapLayout.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-        mapLayout.setFocusable(true);
-
-        // Some offset to align the popup a bit to the left, and a bit down, relative to button's position.
-        int OFFSET_X = -20;
-        int OFFSET_Y = 95;
-
-        // Clear the default translucent background
-        mapLayout.setBackgroundDrawable(new BitmapDrawable());
-
-        // Displaying the popup at the specified location, + offsets.
-        //mapLayout.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-        mapLayout.showAtLocation(layout, Gravity.NO_GRAVITY, OFFSET_X,  OFFSET_Y);
 
 
-        // Getting a reference to Close button, and close the popup when clicked.
-        Button close = (Button) layout.findViewById(R.id.button);
-        close.setOnClickListener(new View.OnClickListener() {
+    public void setupCategories() {
+        ArrayList<String> categoryList = new ArrayList<>();
+        categoryList.add("Frukt & Grönt");
+        categoryList.add("Fisk");
+        categoryList.add("Kött");
+        categoryList.add("Mejeriprodukter");
+        categoryList.add("Städprodukter");
+        categoryList.add("Godis & Glass");
+        categoryList.add("Drycker");
+        categoryList.add("Snacks");
+        categoryList.add("Barnprodukter");
+        categoryList.add("Kaffe & Te");
 
-            @Override
-            public void onClick(View v) {
-                mapLayout.dismiss();
+
+
+        realm.executeTransaction(r -> {
+            if(r.isEmpty()) {
+                for(int i = 0; i < categoryList.size(); i++) {
+                    Category category = r.createObject(Category.class, i);
+                    category.setCategoryName(categoryList.get(i));
+                    category.setPosition(i);
+                }
             }
+
+            /*
+            Category category = r.createObject(Category.class, 1);
+            category.setCategoryName("Frukt & Grönt");
+            Category category1 = r.createObject(Category.class, 2);
+            category1.setCategoryName("Kött");
+
+             */
+
         });
-
     }
-
-     */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -220,7 +275,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_shoppinglist) {
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent);
             return true;
         }
         if (id == R.id.action_categories) {

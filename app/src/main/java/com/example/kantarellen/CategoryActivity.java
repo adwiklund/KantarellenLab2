@@ -20,6 +20,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 
 public class CategoryActivity extends AppCompatActivity {
 
@@ -27,6 +30,11 @@ public class CategoryActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     CategoryAdapter mAdapter;
     ArrayList<String> categoryArrayList = new ArrayList<>();
+    Realm realm;
+
+    public ArrayList<String> getCategoryArrayList() {
+        return categoryArrayList;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +42,8 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
         Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+
+        realm = Realm.getDefaultInstance();
 
         FloatingActionButton newCatButton = ( FloatingActionButton ) findViewById(R.id.newCatButton);
         newCatButton.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +85,14 @@ public class CategoryActivity extends AppCompatActivity {
 
     private void populateRecyclerView() {
 
+        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        for(int i = 0; i < categories.size(); i++) {
+            assert categories.get(i) != null;
+            categoryArrayList.add(categories.get(i).getCategoryName());
+        }
 
+
+        /*
         categoryArrayList.add("Frukt & Grönt");
         categoryArrayList.add("Fisk");
         categoryArrayList.add("Kött");
@@ -86,6 +103,8 @@ public class CategoryActivity extends AppCompatActivity {
         categoryArrayList.add("Snacks");
         categoryArrayList.add("Barnprodukter");
         categoryArrayList.add("Kaffe & Te");
+
+         */
 
 
         mAdapter = new CategoryAdapter(categoryArrayList);
@@ -100,6 +119,13 @@ public class CategoryActivity extends AppCompatActivity {
     }
 
     public void addCategory(String newCategory) {
+
+        realm.executeTransaction(r -> {
+            Category category = r.createObject(Category.class, categoryArrayList.size()+1);
+            category.setCategoryName(newCategory);
+            category.setPosition(categoryArrayList.size()+1);
+        });
+
         categoryArrayList.add(newCategory);
         mAdapter.setData(categoryArrayList);
         recyclerView.setAdapter(mAdapter);
@@ -120,7 +146,9 @@ public class CategoryActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_shoppinglist) {
+            Intent activity2Intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(activity2Intent);
             return true;
         }
         if (id == R.id.action_categories) {
@@ -137,4 +165,10 @@ public class CategoryActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+
+    }
 }
