@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,8 +43,10 @@ public class CategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category);
         Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
-
+        Realm.init(this);
         realm = Realm.getDefaultInstance();
+
+
 
         FloatingActionButton newCatButton = ( FloatingActionButton ) findViewById(R.id.newCatButton);
         newCatButton.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +88,7 @@ public class CategoryActivity extends AppCompatActivity {
 
     private void populateRecyclerView() {
 
-        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        RealmResults<Category> categories = realm.where(Category.class).sort("position").findAll();
         for(int i = 0; i < categories.size(); i++) {
             assert categories.get(i) != null;
             categoryArrayList.add(categories.get(i).getCategoryName());

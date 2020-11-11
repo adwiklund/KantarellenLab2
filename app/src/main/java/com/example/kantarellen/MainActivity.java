@@ -35,6 +35,7 @@ import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,16 +63,24 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Realm.init(this);
+
         Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-
+        Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
 
+        System.out.println("path: " + realm.getPath());
+
         setupCategories();
 
+        realm.executeTransaction(r -> {
+            ShoppingList shoppingList = r.createObject(ShoppingList.class, 1);
+            RealmList<Item> list = new RealmList<>();
+            shoppingList.setItems(list);
+        });
 
         /*
         realm.executeTransaction(r -> {
@@ -96,19 +105,6 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.mobile_list);
 
         final ArrayList<String> shoppinglist = new ArrayList<>();
-
-
-        String[] values = new String[]{"Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
-
-
 
         final ArrayList<String> inventory = new ArrayList<>();
 
@@ -180,29 +176,24 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         m_Text = input.getText().toString();
+
+                        addItem(m_Text);
+
+
+
                         if (inventory.contains(m_Text)) {
+
                             shoppinglist.add(m_Text);
                         } else {
-                            //int i = mapPopup.showMapPopup(MainActivity.this);
-                            //int i = showMapPopup();
-                            //mapPopup.showMapPopup(MainActivity.this);
-                            /*
-                            PopupMenu menu = new PopupMenu(MainActivity.this, view);
-                            for(int i = 0; i < categoryArrayList.size(); i++) {
-                                menu.getMenu().add(categoryArrayList.get(i));
-                            }
-                            menu.show();
 
-                             */
-
-                            //System.out.println("i = " + i);
-                            //editor.putInt(m_Text, i);
-                            //editor.apply();
                             inventory.add(m_Text);
                             shoppinglist.add(m_Text);
 
                         }
+
+
 
                     }
                 });
@@ -223,6 +214,29 @@ public class MainActivity extends AppCompatActivity {
 
         //System.out.println("test = " + highScore);
     }
+
+    public void addItem(String itemName) {
+
+        realm.executeTransaction(r -> {
+            ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+            //RealmList<Item> list = new RealmList<>();
+            //shoppingList.setItems(list);
+            int i = shoppingList.getItems().size();
+            Item item = r.createObject(Item.class, i + 1);
+            item.setItemName(itemName);
+            shoppingList.getItems().add(item);
+        });
+    }
+    /*
+    public void createShoppingList() {
+        realm.executeTransaction(r -> {
+            ShoppingList shoppingList = r.createObject(ShoppingList.class);
+
+        });
+
+    }
+
+     */
 
 
     public void setupCategories() {
