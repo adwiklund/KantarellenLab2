@@ -12,6 +12,26 @@ public class Item extends RealmObject {
     @PrimaryKey
     private long id;
 
+    private Category category;
+
+    private String amount;
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public String getItemName() {
         return itemName;
     }

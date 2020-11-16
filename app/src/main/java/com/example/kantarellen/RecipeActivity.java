@@ -9,13 +9,18 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,9 +28,16 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 //http://www.technotalkative.com/android-gridview-example/
 
@@ -38,6 +50,8 @@ public class RecipeActivity extends AppCompatActivity {
     private ArrayList<String> listRecipe;
     private ArrayList<Bitmap> listRecipePicture;
     private String m_Text = "";
+    Realm realm;
+    byte[] byteArray;
 
     private GridView gridView;
 
@@ -47,6 +61,7 @@ public class RecipeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipe);
         Toolbar toolbar = findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
+        realm = Realm.getDefaultInstance();
 
         prepareList();
 
@@ -63,6 +78,52 @@ public class RecipeActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
+
+                LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                View view = li.inflate(R.layout.recipe_window, null);
+
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext(), R.style.AppTheme_PopupOverlay);
+                alertDialogBuilder.setView(view);
+
+                ImageView imageView = view.findViewById(R.id.imageView);
+                TextView textView = view.findViewById(R.id.textView);
+                //ListView listView = view.findViewById(R.id.list);
+                TextView multiTextView = view.findViewById(R.id.editTextTextMultiLine);
+                //ImageView btnCancle = view.findViewById(R.id.btnCancle);
+                //Button btnContinue = view.findViewById(R.id.btnContinue);
+
+                System.out.println("position = " + position);
+
+                Recipe recipe = realm.where(Recipe.class).equalTo("id", position+1).findFirst();
+
+                System.out.println(recipe.getId());
+
+
+                textView.setText(recipe.getName());
+                imageView.setImageBitmap(createBitmap(recipe.getImage()));
+
+                //btnContinue.setText("string");
+
+                /*
+                btnCancle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO: 7/5/18 your click listener
+                    }
+                });
+                btnContinue.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // TODO: 7/5/18 your click listener
+                    }
+                });
+
+                 */
+
+                AlertDialog alertDialogCongratulations = alertDialogBuilder.create();
+                alertDialogCongratulations.show();
+                alertDialogCongratulations.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);//
+
                 Toast.makeText(RecipeActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
             }
         });
@@ -85,10 +146,12 @@ public class RecipeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         m_Text = input.getText().toString();
-                        listRecipe.add(m_Text);
+                        //listRecipe.add(m_Text);
                         imagePicker();
 
-                        //addRecipe(m_Text);
+
+                        //System.out.println("byteArray here = " + byteArray);
+                        //addRecipe(m_Text, byteArray);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -107,22 +170,6 @@ public class RecipeActivity extends AppCompatActivity {
 
     private void imagePicker() {
 
-        /*
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE);
-
-         */
-
-
-        /*
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, 0);
-
-         */
-
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, REQUEST_CODE);
@@ -140,7 +187,13 @@ public class RecipeActivity extends AppCompatActivity {
                 System.out.println("Hello");
                 InputStream inputStream = RecipeActivity.this.getContentResolver().openInputStream(data.getData());
                 Bitmap selectedImage = BitmapFactory.decodeStream(inputStream);
-                listRecipePicture.add(selectedImage);
+                //listRecipePicture.add(selectedImage);
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byteArray = stream.toByteArray();
+                System.out.println("Bytearray = " + byteArray);
+
+                addRecipe(m_Text, byteArray);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -198,6 +251,51 @@ public class RecipeActivity extends AppCompatActivity {
     public void prepareList()
     {
         listRecipe = new ArrayList<String>();
+        listRecipePicture = new ArrayList<Bitmap>();
+        /*
+        Recipe recipe;
+        if((recipe = realm.where(Recipe.class).findFirst()) == null) {
+            return;
+        }
+
+         */
+
+        RealmResults<Recipe> recipes = realm.where(Recipe.class).findAll();
+
+        if(recipes != null) {
+            realm.executeTransaction(r -> {
+                for(int i = 0; i < recipes.size(); i++) {
+                    listRecipe.add(recipes.get(i).getName());
+
+                    System.out.println("recipe = " + recipes.get(i).getName());
+
+                    Bitmap bitmap = createBitmap(recipes.get(i).getImage());
+
+                    //Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
+
+                    listRecipePicture.add(bitmap);
+                }
+
+            });
+        }
+        /*
+        realm.executeTransaction(r -> {
+            for(int i = 0; i < recipes.size(); i++) {
+                listRecipe.add(recipes.get(i).getName());
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
+
+                listRecipePicture.add(bitmap);
+            }
+
+            //ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
+            //RealmList<Item> list = new RealmList<>();
+            //newShopList.setItems(list);
+        });
+
+         */
+
+
         /*
         listRecipe.add("india");
         listRecipe.add("Brazil");
@@ -221,7 +319,7 @@ public class RecipeActivity extends AppCompatActivity {
 
 
          */
-        listRecipePicture = new ArrayList<Bitmap>();
+
         //listRecipePicture.add(R.drawable.india);
         /*
         listFlag.add(R.drawable.brazil);
@@ -247,9 +345,33 @@ public class RecipeActivity extends AppCompatActivity {
          */
     }
 
-    public void addRecipe(String name, Bitmap imageId) {
-        listRecipe.add(name);
-        listRecipePicture.add(imageId);
+    public Bitmap createBitmap(byte[] bitmapData) {
+        Bitmap bitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
+        System.out.println("bitmapData = " + bitmapData);
+        ByteBuffer buffer = ByteBuffer.wrap(bitmapData);
+        bitmap.copyPixelsFromBuffer(buffer);
+        return bitmap;
+    }
+
+    public void addRecipe(String name, byte[] imageId) {
+
+        realm.executeTransaction(r -> {
+            Recipe recipe = r.createObject(Recipe.class, listRecipe.size() + 1);
+            //recipe.setId(listRecipe.size() + 1);
+            recipe.setName(name);
+            recipe.setImage(imageId);
+
+            listRecipe.add(name);
+
+            //Bitmap bitmap = BitmapFactory.decodeByteArray(imageId, 0, imageId.length);
+            Bitmap bitmap = createBitmap(imageId);
+            listRecipePicture.add(bitmap);
+
+            //ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
+            //RealmList<Item> list = new RealmList<>();
+            //newShopList.setItems(list);
+        });
+
     }
 
     @Override
