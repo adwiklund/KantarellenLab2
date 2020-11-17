@@ -83,7 +83,7 @@ public class RecipeActivity extends AppCompatActivity {
                 ImageView imageView = view.findViewById(R.id.recipeImageView);
                 TextView textView = view.findViewById(R.id.textView);
                 //ListView listView = view.findViewById(R.id.list);
-                TextView multiTextView = view.findViewById(R.id.editTextTextMultiLine);
+                TextView instructionTextView = view.findViewById(R.id.instructionTextView);
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
                 //Button btnContinue = view.findViewById(R.id.btnContinue);
 
@@ -98,6 +98,13 @@ public class RecipeActivity extends AppCompatActivity {
                 textView.setText(recipe.getName());
                 Bitmap bitmap = createBitmap(recipe.getImage());
                 imageView.setImageBitmap(bitmap);
+                instructionTextView.setText("\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
+                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
+                        "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
+                        "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
+                        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia " +
+                        "deserunt mollit anim id est laborum.\"");
 
                 //btnContinue.setText("string");
 
