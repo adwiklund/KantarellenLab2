@@ -17,11 +17,23 @@ public class Recipe extends RealmObject {
     private RealmList<Item> items;
 
     private byte[] image;
+    //private String image;
 
     private String name;
 
     @Nullable
     private String instructions;
+
+    /*
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+     */
 
     public long getId() {
         return id;
@@ -39,6 +51,7 @@ public class Recipe extends RealmObject {
         this.items = items;
     }
 
+
     public byte[] getImage() {
         return image;
     }
@@ -46,6 +59,8 @@ public class Recipe extends RealmObject {
     public void setImage(byte[] image) {
         this.image = image;
     }
+
+
 
     public String getName() {
         return name;

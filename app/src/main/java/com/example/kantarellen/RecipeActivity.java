@@ -4,19 +4,26 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +35,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
@@ -82,7 +90,7 @@ public class RecipeActivity extends AppCompatActivity {
 
                 ImageView imageView = view.findViewById(R.id.recipeImageView);
                 TextView textView = view.findViewById(R.id.textView);
-                //ListView listView = view.findViewById(R.id.list);
+                ListView listView = view.findViewById(R.id.list);
                 TextView instructionTextView = view.findViewById(R.id.instructionTextView);
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
                 //Button btnContinue = view.findViewById(R.id.btnContinue);
@@ -92,12 +100,39 @@ public class RecipeActivity extends AppCompatActivity {
                 Recipe recipe = realm.where(Recipe.class).equalTo("id", position+1).findFirst();
 
                 System.out.println("id = " + recipe.getId());
-                System.out.println("image = " + recipe.getImage());
+                System.out.println("bitmapData = " + recipe.getImage());
+                System.out.println("bitmapData length = " + recipe.getImage().length);
 
 
                 textView.setText(recipe.getName());
-                Bitmap bitmap = createBitmap(recipe.getImage());
-                imageView.setImageBitmap(bitmap);
+
+                //Recipe test = realm.where(Recipe.class).findFirst();
+                //Bitmap testBitmap = createBitmap(test.getImage());
+                //imageView.setImageBitmap(testBitmap);
+
+                //Bitmap bitmap = createBitmap(recipe.getImage());
+                //imageView.setImageBitmap(bitmap);
+
+                System.out.println("listRecipePicture size = " + listRecipePicture.size());
+
+
+                imageView.setImageBitmap(listRecipePicture.get(0));
+
+
+                ArrayList<String> itemArrayList = new ArrayList<>();
+
+                itemArrayList.add("Smör");
+                itemArrayList.add("Ägg");
+                itemArrayList.add("Mjöl");
+                itemArrayList.add("Socker");
+                /*
+                CategoryAdapter itemAdapter = new CategoryAdapter(itemArrayList);
+
+                listView.setAdapter((ListAdapter) itemAdapter);
+
+                 */
+
+
                 instructionTextView.setText("\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
                         "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
                         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
@@ -128,7 +163,7 @@ public class RecipeActivity extends AppCompatActivity {
                 alertDialogCongratulations.show();
                 alertDialogCongratulations.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);//
 
-                Toast.makeText(RecipeActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(RecipeActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -195,7 +230,8 @@ public class RecipeActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byteArray = stream.toByteArray();
-                System.out.println("Bytearray = " + byteArray);
+                System.out.println("bitmapData = " + byteArray);
+                System.out.println("BitmapData length = " + byteArray.length);
 
                 addRecipe(m_Text, byteArray);
             } catch (FileNotFoundException e) {
@@ -273,87 +309,30 @@ public class RecipeActivity extends AppCompatActivity {
 
                     System.out.println("recipe = " + recipes.get(i).getName());
 
-                    Bitmap bitmap = createBitmap(recipes.get(i).getImage());
+                    //byte[] bytes = Base64.decode(recipes.get(i).getImage(), Base64.DEFAULT);
+                    //Bitmap bitmap = createBitmap(bytes);
+                    //Bitmap bitmap = createBitmap(recipes.get(i).getImage());
 
-                    //Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
+
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
 
                     listRecipePicture.add(bitmap);
                 }
 
             });
         }
-        /*
-        realm.executeTransaction(r -> {
-            for(int i = 0; i < recipes.size(); i++) {
-                listRecipe.add(recipes.get(i).getName());
 
-                Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
-
-                listRecipePicture.add(bitmap);
-            }
-
-            //ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
-            //RealmList<Item> list = new RealmList<>();
-            //newShopList.setItems(list);
-        });
-
-         */
-
-
-        /*
-        listRecipe.add("india");
-        listRecipe.add("Brazil");
-        listRecipe.add("Canada");
-        listRecipe.add("China");
-        listRecipe.add("France");
-        listRecipe.add("Germany");
-        listRecipe.add("Iran");
-        listRecipe.add("Italy");
-        listRecipe.add("Japan");
-        listRecipe.add("Korea");
-        listRecipe.add("Mexico");
-        listRecipe.add("Netherlands");
-        listRecipe.add("Portugal");
-        listRecipe.add("Russia");
-        listRecipe.add("Saudi Arabia");
-        listRecipe.add("Spain");
-        listRecipe.add("Turkey");
-        listRecipe.add("United Kingdom");
-        listRecipe.add("United States");
-
-
-         */
-
-        //listRecipePicture.add(R.drawable.india);
-        /*
-        listFlag.add(R.drawable.brazil);
-        listFlag.add(R.drawable.canada);
-        listFlag.add(R.drawable.china);
-        listFlag.add(R.drawable.france);
-        listFlag.add(R.drawable.germany);
-        listFlag.add(R.drawable.iran);
-        listFlag.add(R.drawable.italy);
-        listFlag.add(R.drawable.japan);
-        listFlag.add(R.drawable.korea);
-        listFlag.add(R.drawable.mexico);
-        listFlag.add(R.drawable.netherlands);
-        listFlag.add(R.drawable.portugal);
-        listFlag.add(R.drawable.russia);
-        listFlag.add(R.drawable.saudi_arabia);
-        listFlag.add(R.drawable.spain);
-        listFlag.add(R.drawable.turkey);
-        listFlag.add(R.drawable.united_kingdom);
-        listFlag.add(R.drawable.united_states);
-
-
-         */
     }
 
     public Bitmap createBitmap(byte[] bitmapData) {
         Bitmap bitmap = Bitmap.createBitmap(800, 600, Bitmap.Config.ARGB_8888);
         System.out.println("bitmapData = " + bitmapData);
+        System.out.println("BitmapData length = " + bitmapData.length);
         ByteBuffer buffer = ByteBuffer.wrap(bitmapData);
         bitmap.copyPixelsFromBuffer(buffer);
+
+
+
         return bitmap;
     }
 
@@ -363,12 +342,24 @@ public class RecipeActivity extends AppCompatActivity {
             Recipe recipe = r.createObject(Recipe.class, listRecipe.size() + 1);
             //recipe.setId(listRecipe.size() + 1);
             recipe.setName(name);
+            //String encodeImage = Base64.encodeToString(imageId, Base64.DEFAULT);
             recipe.setImage(imageId);
+            //recipe.setImage(encodeImage);
 
             listRecipe.add(name);
 
             //Bitmap bitmap = BitmapFactory.decodeByteArray(imageId, 0, imageId.length);
-            Bitmap bitmap = createBitmap(imageId);
+            System.out.println("bitmapData = " + imageId);
+            System.out.println("BitmapData length = " + imageId.length);
+
+            //byte[] bytes = Base64.decode(imageId, Base64.DEFAULT);
+            //Bitmap bitmap = createBitmap(bytes);
+
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageId, 0, imageId.length);
+
+            bitmap = rotateImage(90, bitmap);
+
+            //Bitmap bitmap = createBitmap(imageId);
             listRecipePicture.add(bitmap);
 
             //ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
@@ -376,6 +367,13 @@ public class RecipeActivity extends AppCompatActivity {
             //newShopList.setItems(list);
         });
 
+    }
+
+    public Bitmap rotateImage(int angle, Bitmap bitmapSrc) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(bitmapSrc, 0, 0,
+                bitmapSrc.getWidth(), bitmapSrc.getHeight(), matrix, true);
     }
 
     @Override
