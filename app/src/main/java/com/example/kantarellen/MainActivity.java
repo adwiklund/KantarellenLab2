@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     MapPopup mapPopup;
     Realm realm;
     private RealmResults<Category> categories;
+    ArrayList<String> shoppinglist;
     //RealmChangeListener realmChangeListener;
 
 
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupCategories();
 
-        final ArrayList<String> shoppinglist = new ArrayList<>();
+        shoppinglist = new ArrayList<>();
 
         ShoppingList realmShopList = realm.where(ShoppingList.class).findFirst();
 
@@ -115,8 +116,8 @@ public class MainActivity extends AppCompatActivity {
         categories = realm.where(Category.class).findAllAsync();
         categories.addChangeListener(realmChangeListener);
 
-        RealmResults<Category> results = realm.where(Category.class).findAll();
-        System.out.println("test = " + results.size());
+        //RealmResults<Category> results = realm.where(Category.class).findAll();
+        //System.out.println("test = " + results.size());
 
         mapPopup = new MapPopup();
 
@@ -134,18 +135,11 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            //private int save = -1;
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                // ListView Clicked item index
-                //int itemPosition     = position;
-
-                // ListView Clicked item value
-                //String  itemValue    = (String) listView.getItemAtPosition(position);
                 TextView row = (TextView) view;
-                //System.out.println("flag = " + row.getPaintFlags());
 
                 if(row.getPaintFlags() == 0 || row.getPaintFlags() == 1281) {
                     row.setPaintFlags(row.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -153,28 +147,14 @@ public class MainActivity extends AppCompatActivity {
                     row.setPaintFlags(0);
                 }
 
-                //row.setPaintFlags(row.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                //parent.getChildAt(itemPosition).setBackgroundColor(Color.GREEN);
-
-
-                //save = position;
-
             }
 
         });
 
 
-        //final mapPopup popup = new mapPopup();
 
-
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-
-       // SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        final SharedPreferences.Editor editor = sharedPref.edit();
-
-        CategoryActivity categoryActivity = new CategoryActivity();
-        final ArrayList<String> categoryArrayList = categoryActivity.getCategoryArrayList();
+        //CategoryActivity categoryActivity = new CategoryActivity();
+        //final ArrayList<String> categoryArrayList = categoryActivity.getCategoryArrayList();
 
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -197,21 +177,30 @@ public class MainActivity extends AppCompatActivity {
 
                         m_Text = input.getText().toString();
 
-                        addItem(m_Text);
+                        Item item = realm.where(Item.class).equalTo("itemName", m_Text).findFirst();
 
-
-
-                        if (inventory.contains(m_Text)) {
-
-                            shoppinglist.add(m_Text);
+                        if(item != null) {
+                            System.out.println("Yes it does");
+                            shoppinglist.add(item.getItemName());
                         } else {
+                            addItem(m_Text);
+                            /*
+                            realm.executeTransaction(r -> {
+                                Number currentId = realm.where(Item.class).max("id");
+                                int nextId;
+                                if(currentId == null) {
+                                    nextId = 1;
+                                } else {
+                                    nextId = currentId.intValue() + 1;
+                                }
+                                Item newItem = new Item();
+                                newItem.setId(nextId);
+                                newItem.setItemName(m_Text);
+                                shoppinglist.add(newItem.getItemName());
+                            });
 
-                            inventory.add(m_Text);
-                            shoppinglist.add(m_Text);
-
+                             */
                         }
-
-
 
                     }
                 });
@@ -267,14 +256,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void addItem(String itemName) {
 
-        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
-        if(shoppingList == null) {
+        ShoppingList realmShoppingList = realm.where(ShoppingList.class).findFirst();
+        if(realmShoppingList == null) {
             createShoppingList();
             addItem(itemName);
         }
-        if(shoppingList.getItems() == null) {
+        if(realmShoppingList.getItems() == null) {
             RealmList<Item> list = new RealmList<>();
-            shoppingList.setItems(list);
+            realmShoppingList.setItems(list);
         }
 
         realm.executeTransaction(r -> {
@@ -288,7 +277,9 @@ public class MainActivity extends AppCompatActivity {
             }
             Item item = r.createObject(Item.class, nextId);
             item.setItemName(itemName);
-            shoppingList.getItems().add(item);
+            //shoppingList.getItems().add(item);
+            shoppinglist.add(item.getItemName());
+
         });
     }
 

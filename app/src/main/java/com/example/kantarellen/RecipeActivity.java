@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -14,12 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +32,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 //http://www.technotalkative.com/android-gridview-example/
@@ -79,13 +74,13 @@ public class RecipeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
 
-                LayoutInflater li = LayoutInflater.from(getApplicationContext());
+                LayoutInflater li = LayoutInflater.from(RecipeActivity.this);
                 View view = li.inflate(R.layout.recipe_window, null);
 
-                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext(), R.style.AppTheme_PopupOverlay);
+                final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(RecipeActivity.this, R.style.Theme_MaterialComponents_Dialog_Alert);
                 alertDialogBuilder.setView(view);
 
-                ImageView imageView = view.findViewById(R.id.imageView);
+                ImageView imageView = view.findViewById(R.id.recipeImageView);
                 TextView textView = view.findViewById(R.id.textView);
                 //ListView listView = view.findViewById(R.id.list);
                 TextView multiTextView = view.findViewById(R.id.editTextTextMultiLine);
@@ -96,11 +91,13 @@ public class RecipeActivity extends AppCompatActivity {
 
                 Recipe recipe = realm.where(Recipe.class).equalTo("id", position+1).findFirst();
 
-                System.out.println(recipe.getId());
+                System.out.println("id = " + recipe.getId());
+                System.out.println("image = " + recipe.getImage());
 
 
                 textView.setText(recipe.getName());
-                imageView.setImageBitmap(createBitmap(recipe.getImage()));
+                Bitmap bitmap = createBitmap(recipe.getImage());
+                imageView.setImageBitmap(bitmap);
 
                 //btnContinue.setText("string");
 
