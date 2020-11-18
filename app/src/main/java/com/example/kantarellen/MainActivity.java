@@ -101,31 +101,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        /*
-        realm.executeTransaction(r -> {
-            Category category = r.createObject(Category.class, 1);
-            category.setCategoryName("Frukt");
-
-            Category category1 = r.createObject(Category.class, 2);
-            category1.setCategoryName("Kött");
-
-        });
-
-         */
-
         categories = realm.where(Category.class).findAllAsync();
         categories.addChangeListener(realmChangeListener);
 
-        //RealmResults<Category> results = realm.where(Category.class).findAll();
-        //System.out.println("test = " + results.size());
-
-        mapPopup = new MapPopup();
+        //mapPopup = new MapPopup();
 
         listView = (ListView) findViewById(R.id.mobile_list);
-
-        //final ArrayList<String> shoppinglist = new ArrayList<>();
-
-        final ArrayList<String> inventory = new ArrayList<>();
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -150,12 +131,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
-
-
-        //CategoryActivity categoryActivity = new CategoryActivity();
-        //final ArrayList<String> categoryArrayList = categoryActivity.getCategoryArrayList();
-
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -267,8 +242,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         realm.executeTransaction(r -> {
-            ShoppingList sl = realm.where(ShoppingList.class).findFirst();
-            Number currentId = sl.getItems().max("id");
+            //Number currentId = realmShoppingList.getItems().max("id");
+            //RealmList<Item> items = realmShoppingList.getItems();
+            //Number currentId = items.max("id");
+            Number currentId = realm.where(Item.class).max("id");
+            //ShoppingList sl = realm.where(ShoppingList.class).findFirst();
+            //RealmList<Item> slItems = sl.getItems();
+            //Number currentId = slItems.max("id");
+            System.out.println("CurrentId = " + currentId);
+           // Number currentId = sl.getItems().max("id");
             int nextId = 0;
             if(currentId == null) {
                 nextId = 1;

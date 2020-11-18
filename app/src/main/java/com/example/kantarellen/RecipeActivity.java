@@ -241,64 +241,10 @@ public class RecipeActivity extends AppCompatActivity {
         }
     }
 
-    /*
-    @Override
-    protected void onActivityResult(int reqCode, int resultCode, Intent data) {
-        super.onActivityResult(reqCode, resultCode, data);
-
-        System.out.println("resultCode = " + resultCode);
-        System.out.println("RESULT_OK = " + RESULT_OK);
-        if (resultCode == RESULT_OK) {
-            //if (reqCode == REQUEST_CODE) {
-            System.out.println("Hej?");
-                try {
-                    final Uri imageUri = data.getData();
-                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
-                    //ImageView imageView = new ImageView(this);
-                    //Bitmap bitmap = BitmapFactory.decodeStream((getContentResolver().openInputStream(imageUri)));
-                    //imageView.setImageBitmap(selectedImage);
-                    System.out.println("Hola?");
-                    listRecipePicture.add(selectedImage);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-          //  }
-        }
-    }
-    */
-
-    /*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-
-
-        System.out.println(requestCode);
-        if (requestCode == REQUEST_CODE) {
-            //TODO: action
-            System.out.println("Hello?");
-        }
-    }
-
-     */
-
-
-
-
     public void prepareList()
     {
         listRecipe = new ArrayList<String>();
         listRecipePicture = new ArrayList<Bitmap>();
-        /*
-        Recipe recipe;
-        if((recipe = realm.where(Recipe.class).findFirst()) == null) {
-            return;
-        }
-
-         */
 
         RealmResults<Recipe> recipes = realm.where(Recipe.class).findAll();
 
