@@ -103,7 +103,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
                 Collections.swap(data, i, i - 1);
             }
         }
-
+        /*
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute (Realm realm) {
@@ -121,6 +121,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             }
         });
 
+         */
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                Number number = categories.max("id");
+                for(int i = 0; i < number.intValue(); i++) {
+                    categories.get(i).setCategoryName(data.get(i));
+                }
+            }
+        });
 
         notifyItemMoved(fromPosition, toPosition);
     }

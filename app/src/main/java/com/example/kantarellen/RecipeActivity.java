@@ -115,8 +115,11 @@ public class RecipeActivity extends AppCompatActivity {
 
                 System.out.println("listRecipePicture size = " + listRecipePicture.size());
 
+                Bitmap bitmap = BitmapFactory.decodeByteArray(recipe.getImage(), 0, recipe.getImage().length);
+                bitmap = rotateImage(90, bitmap);
 
-                imageView.setImageBitmap(listRecipePicture.get(0));
+                //imageView.setImageBitmap(listRecipePicture.get(0));
+                imageView.setImageBitmap(bitmap);
 
 
                 ArrayList<String> itemArrayList = new ArrayList<>();
@@ -261,6 +264,7 @@ public class RecipeActivity extends AppCompatActivity {
 
 
                     Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
+                    bitmap = rotateImage(90, bitmap);
 
                     listRecipePicture.add(bitmap);
                 }

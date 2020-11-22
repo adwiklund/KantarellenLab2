@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-        Realm.deleteRealm(config);
+        //Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
@@ -159,22 +159,7 @@ public class MainActivity extends AppCompatActivity {
                             shoppinglist.add(item.getItemName());
                         } else {
                             addItem(m_Text);
-                            /*
-                            realm.executeTransaction(r -> {
-                                Number currentId = realm.where(Item.class).max("id");
-                                int nextId;
-                                if(currentId == null) {
-                                    nextId = 1;
-                                } else {
-                                    nextId = currentId.intValue() + 1;
-                                }
-                                Item newItem = new Item();
-                                newItem.setId(nextId);
-                                newItem.setItemName(m_Text);
-                                shoppinglist.add(newItem.getItemName());
-                            });
 
-                             */
                         }
 
                     }
@@ -242,15 +227,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         realm.executeTransaction(r -> {
-            //Number currentId = realmShoppingList.getItems().max("id");
-            //RealmList<Item> items = realmShoppingList.getItems();
-            //Number currentId = items.max("id");
             Number currentId = realm.where(Item.class).max("id");
-            //ShoppingList sl = realm.where(ShoppingList.class).findFirst();
-            //RealmList<Item> slItems = sl.getItems();
-            //Number currentId = slItems.max("id");
-            System.out.println("CurrentId = " + currentId);
-           // Number currentId = sl.getItems().max("id");
             int nextId = 0;
             if(currentId == null) {
                 nextId = 1;
@@ -259,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
             }
             Item item = r.createObject(Item.class, nextId);
             item.setItemName(itemName);
-            //shoppingList.getItems().add(item);
             shoppinglist.add(item.getItemName());
 
         });
@@ -286,8 +262,6 @@ public class MainActivity extends AppCompatActivity {
         categoryList.add("Snacks");
         categoryList.add("Barnprodukter");
         categoryList.add("Kaffe & Te");
-
-
 
         realm.executeTransaction(r -> {
             if(r.isEmpty()) {
