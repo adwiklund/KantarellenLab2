@@ -12,6 +12,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
 import android.util.Log;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private RealmResults<Category> categories;
     ArrayList<String> shoppinglist;
     //RealmChangeListener realmChangeListener;
+    //Category currentCat;
 
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-        //Realm.deleteRealm(config);
+        Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
@@ -236,9 +239,45 @@ public class MainActivity extends AppCompatActivity {
             }
             Item item = r.createObject(Item.class, nextId);
             item.setItemName(itemName);
-            shoppinglist.add(item.getItemName());
+            chooseItemCategory(item);
+
+            //item.setCategory(currentCat);
+            //shoppinglist.add(item.getItemName());
 
         });
+    }
+
+    private void currentCategory(Category category, Item item) {
+        //currentCat = category;
+        realm.executeTransaction(r -> {
+            item.setCategory(category);
+        });
+        //item.setCategory(category);
+        shoppinglist.add(item.getItemName());
+    }
+
+    private void chooseItemCategory(Item item) {
+
+        //final Category[] cat = new Category[1];
+
+        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        String[] categoryArray = new String[categories.size()];
+        for(int i = 0; i < categories.size(); i++) {
+            //Category category = categories.get(i).get
+            categoryArray[i] = categories.get(i).getCategoryName();
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Välj varans kategori");
+        builder.setItems(categoryArray, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                currentCategory(categories.get(which), item);
+
+            }
+        });
+        builder.show();
+
     }
 
     public void createShoppingList() {
