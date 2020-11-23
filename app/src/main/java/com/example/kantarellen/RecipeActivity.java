@@ -29,6 +29,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -55,6 +57,7 @@ public class RecipeActivity extends AppCompatActivity {
     private String m_Text = "";
     Realm realm;
     byte[] byteArray;
+    private ArrayList<String> items;
 
     private GridView gridView;
 
@@ -90,7 +93,8 @@ public class RecipeActivity extends AppCompatActivity {
 
                 ImageView imageView = view.findViewById(R.id.recipeImageView);
                 TextView textView = view.findViewById(R.id.textView);
-                ListView listView = view.findViewById(R.id.list);
+                //ListView listView = view.findViewById(R.id.list);
+                RecyclerView rvItems = view.findViewById(R.id.rvItems);
                 TextView instructionTextView = view.findViewById(R.id.instructionTextView);
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
                 //Button btnContinue = view.findViewById(R.id.btnContinue);
@@ -121,7 +125,7 @@ public class RecipeActivity extends AppCompatActivity {
                 //imageView.setImageBitmap(listRecipePicture.get(0));
                 imageView.setImageBitmap(bitmap);
 
-
+                /*
                 ArrayList<String> itemArrayList = new ArrayList<>();
 
                 itemArrayList.add("Smör");
@@ -129,7 +133,32 @@ public class RecipeActivity extends AppCompatActivity {
                 itemArrayList.add("Mjöl");
                 itemArrayList.add("Socker");
 
+                 */
 
+                items = new ArrayList<>();
+
+                //RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
+                Item item0 = new Item();
+                item0.setItemName("Smör");
+                item0.setId(0);
+                items.add(item0.getItemName());
+                Item item1 = new Item();
+                item1.setItemName("Mjölk");
+                item1.setId(1);
+                items.add(item1.getItemName());
+                Item item2 = new Item();
+                item2.setItemName("Vetemjöl");
+                item2.setId(2);
+                items.add(item2.getItemName());
+                Item item3 = new Item();
+                item3.setItemName("Jäst");
+                item3.setId(3);
+                items.add(item3.getItemName());
+
+                RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
+
+                rvItems.setAdapter(itemAdapter);
+                rvItems.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
                 /*
                 CategoryAdapter itemAdapter = new CategoryAdapter(itemArrayList);
 

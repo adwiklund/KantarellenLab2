@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipeItemAdapter extends
@@ -33,9 +34,9 @@ public class RecipeItemAdapter extends
         }
     }
 
-    private List<Item> mItems;
+    private ArrayList<String> mItems;
 
-    public RecipeItemAdapter(List<Item> items) {
+    public RecipeItemAdapter(ArrayList<String> items) {
         mItems = items;
     }
 
@@ -56,11 +57,12 @@ public class RecipeItemAdapter extends
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data model based on position
-        Item item = mItems.get(position);
+        String item = mItems.get(position);
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
-        textView.setText(item.getItemName());
+        //textView.setText(item.getItemName());
+        textView.setText(item);
         /*
         Button button = holder.messageButton;
         button.setText(contact.isOnline() ? "Message" : "Offline");
