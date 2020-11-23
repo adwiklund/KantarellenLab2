@@ -128,6 +128,8 @@ public class RecipeActivity extends AppCompatActivity {
                 itemArrayList.add("Ägg");
                 itemArrayList.add("Mjöl");
                 itemArrayList.add("Socker");
+
+
                 /*
                 CategoryAdapter itemAdapter = new CategoryAdapter(itemArrayList);
 

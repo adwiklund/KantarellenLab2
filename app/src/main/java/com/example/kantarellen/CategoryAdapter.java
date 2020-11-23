@@ -17,6 +17,7 @@ import java.util.List;
 import io.realm.Realm;
 
 import io.realm.RealmList;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
@@ -127,8 +128,27 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             @Override
             public void execute(Realm realm) {
                 Number number = categories.max("id");
+                //RealmResults<Item> items = realm.where(Item.class).contains("category", i)
                 for(int i = 0; i < number.intValue(); i++) {
+                    //RealmResults<Item> items = realm.where(Item.class).contains("category", categories.get(i).getCategoryName()).findAll();
+                    /*
+                    RealmResults<Item> items = realm.where(Item.class).equalTo("category.id", i).findAll();
+                    if(items.size() > 0) {
+                        System.out.println("items = " + items.get(i));
+                    }
+
+                     */
+
                     categories.get(i).setCategoryName(data.get(i));
+
+                    /*
+                    //RealmResults<Item> items = realm.where(Item.class).contains("category", categories.get(i).getCategoryName()).findAll();
+                    for(int j = 0; j < items.size(); j++) {
+                        System.out.println("Here");
+                        items.get(j).setCategory(categories.get(i));
+                    }
+
+                     */
                 }
             }
         });

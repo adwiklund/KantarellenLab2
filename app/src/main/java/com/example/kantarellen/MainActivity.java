@@ -1,10 +1,8 @@
 package com.example.kantarellen;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
 
@@ -12,11 +10,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 
 import android.view.Menu;
@@ -25,18 +20,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -160,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                         if(item != null) {
                             System.out.println("Yes it does");
                             shoppinglist.add(item.getItemName());
+                            //if(item.getCategory() != )
                         } else {
                             addItem(m_Text);
 
@@ -247,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void currentCategory(Category category, Item item) {
+    private void setItemCategory(Category category, Item item) {
         //currentCat = category;
         realm.executeTransaction(r -> {
             item.setCategory(category);
@@ -272,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setItems(categoryArray, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                currentCategory(categories.get(which), item);
+                setItemCategory(categories.get(which), item);
 
             }
         });
@@ -290,6 +281,40 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void setupCategories() {
+        /*
+        ArrayList<String> categoryList = new ArrayList<>();
+        RealmResults<Category> categories = realm.where(Category.class).findAll();
+        if(categories == null) {
+            categoryList.add("Frukt & Grönt");
+            categoryList.add("Fisk");
+            categoryList.add("Kött");
+            categoryList.add("Mejeriprodukter");
+            categoryList.add("Städprodukter");
+            categoryList.add("Godis & Glass");
+            categoryList.add("Drycker");
+            categoryList.add("Snacks");
+            categoryList.add("Barnprodukter");
+            categoryList.add("Kaffe & Te");
+
+            realm.executeTransaction(r -> {
+                if(r.isEmpty()) {
+                    for(int i = 0; i < categoryList.size(); i++) {
+                        Category category = r.createObject(Category.class, i);
+                        category.setCategoryName(categoryList.get(i));
+                        category.setPosition(i);
+                    }
+                }
+
+            });
+        } else {
+            Number maxId = categories.max("id");
+            for(int i = 0; i < maxId.intValue(); i++) {
+                categoryList.add(categories.get(i).getCategoryName());
+            }
+        }
+
+         */
+
         ArrayList<String> categoryList = new ArrayList<>();
         categoryList.add("Frukt & Grönt");
         categoryList.add("Fisk");
@@ -312,6 +337,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+
     }
 
     @Override
