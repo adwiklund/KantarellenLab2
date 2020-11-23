@@ -10,6 +10,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
 import android.view.View;
@@ -35,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
     ListView listView;
     private String m_Text = "";
-    MapPopup mapPopup;
     Realm realm;
     private RealmResults<Category> categories;
     ArrayList<String> shoppinglist;

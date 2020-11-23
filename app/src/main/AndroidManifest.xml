@@ -13,8 +13,6 @@
             android:launchMode="singleInstance"/>
         <activity android:name=".RecipeActivity"
             android:launchMode="singleInstance"/>
-        <activity android:name=".MapPopupActivity"
-            android:launchMode="singleInstance"/>
         <activity android:name=".MyListActivity"
             android:launchMode="singleInstance"/>
         <activity

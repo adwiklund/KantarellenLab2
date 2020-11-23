@@ -115,6 +115,13 @@
         android:text="InstructionTextView"
         />
 
+    <Button
+        android:id="@+id/btnAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lägg till i listan"
+        />
+
     <!--
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add"

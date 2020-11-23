@@ -25,7 +25,11 @@ android:layout_height="match_parent"
 xmlns:tools="http://schemas.android.com/tools"
 android:orientation="vertical">
 
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <!--
     <ListView
         android:paddingTop="50dp"
         android:id="@+id/list"
@@ -33,6 +37,6 @@ android:orientation="vertical">
         android:layout_height="match_parent">
 
     </ListView>
-
+    -->
 
 </LinearLayout>

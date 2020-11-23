@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -42,6 +43,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 //http://www.technotalkative.com/android-gridview-example/
@@ -97,7 +99,7 @@ public class RecipeActivity extends AppCompatActivity {
                 RecyclerView rvItems = view.findViewById(R.id.rvItems);
                 TextView instructionTextView = view.findViewById(R.id.instructionTextView);
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
-                //Button btnContinue = view.findViewById(R.id.btnContinue);
+                Button btnAdd = view.findViewById(R.id.btnAdd);
 
                 System.out.println("position = " + position);
 
@@ -184,14 +186,23 @@ public class RecipeActivity extends AppCompatActivity {
                         // TODO: 7/5/18 your click listener
                     }
                 });
-                btnContinue.setOnClickListener(new View.OnClickListener() {
+                */
+                btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // TODO: 7/5/18 your click listener
+                        /*
+                        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+                        RealmList<Item> shoppingListItems = shoppingList.getItems();
+                        for(int i = 0; i < items.size(); i++) {
+                            //shoppingListItems.add(items.get(i));
+                        }
+
+                         */
+
                     }
                 });
 
-                 */
+
 
                 AlertDialog alertDialogCongratulations = alertDialogBuilder.create();
                 alertDialogCongratulations.show();
