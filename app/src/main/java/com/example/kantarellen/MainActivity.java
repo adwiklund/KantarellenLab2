@@ -1,6 +1,7 @@
 package com.example.kantarellen;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -10,6 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.InputType;
@@ -19,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
     //RealmChangeListener realmChangeListener;
     //Category currentCat;
 
+    RecyclerView rv;
+    ArrayList<String> items;
+    ShoppingListAdapter shoppingListAdapter;
+    EditText nameEditTxt;
+
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
         String insertions = changeSet.getInsertions().length == 0 ? "" : "\n - Insertions: " + Arrays.toString(changeSet.getInsertions());
@@ -60,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        rv = (RecyclerView) findViewById(R.id.mainRecyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this));
+
         Realm.init(this);
 
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
@@ -70,10 +81,20 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
 
+        RealmHelper helper = new RealmHelper(realm);
+        items = helper.retrieve();
+
+        shoppingListAdapter = new ShoppingListAdapter(this, items);
+        rv.setAdapter(shoppingListAdapter);
+
+
+
+
         System.out.println("path: " + realm.getPath());
 
         setupCategories();
 
+        /*
         shoppinglist = new ArrayList<>();
 
         ShoppingList realmShopList = realm.where(ShoppingList.class).findFirst();
@@ -93,12 +114,15 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+         */
+
 
         categories = realm.where(Category.class).findAllAsync();
         categories.addChangeListener(realmChangeListener);
 
         //mapPopup = new MapPopup();
 
+        /*
         listView = (ListView) findViewById(R.id.mobile_list);
 
 
@@ -125,11 +149,16 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+         */
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                displayInputDialog();
+
+                /*
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Ny vara");
 
@@ -167,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
                 builder.show();
 
+                 */
+
             }
         });
 
@@ -174,6 +205,13 @@ public class MainActivity extends AppCompatActivity {
         del.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                helper.delete();
+
+                items = helper.retrieve();
+                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this,items);
+                rv.setAdapter(shoppingListAdapter);
+                /*
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Rensa listan?");
@@ -203,9 +241,46 @@ public class MainActivity extends AppCompatActivity {
 
                 builder.show();
 
+                 */
+
             }
         });
 
+    }
+
+    private void displayInputDialog()
+    {
+        Dialog d=new Dialog(this);
+        d.setTitle("Save To Realm");
+        d.setContentView(R.layout.shoppinglist_input_dialog);
+
+        nameEditTxt= (EditText) d.findViewById(R.id.nameEditText);
+        Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //GET DATA
+                Item i = new Item();
+                i.setItemName(nameEditTxt.getText().toString());
+
+
+                //SAVE
+                RealmHelper helper=new RealmHelper(realm);
+                helper.setId(i);
+                helper.save(i);
+                nameEditTxt.setText("");
+
+                //REFRESH
+                items = helper.retrieve();
+                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this,items);
+                rv.setAdapter(shoppingListAdapter);
+
+            }
+        });
+
+        d.show();
     }
 
     public void addItem(String itemName) {
