@@ -1,5 +1,6 @@
 package com.example.kantarellen;
 
+import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;
 import io.realm.annotations.PrimaryKey;
@@ -44,7 +45,17 @@ public class Item extends RealmObject {
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setId(Realm realm) {
+         realm.executeTransaction(r -> {
+        Number currentId = realm.where(Item.class).max("id");
+        int nextId = 0;
+        if (currentId == null) {
+            nextId = 1;
+        } else {
+            nextId = currentId.intValue() + 1;
+        }
+        //item.setId(nextId);
+        this.id = nextId;
+    });
     }
 }

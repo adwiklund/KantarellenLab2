@@ -142,19 +142,23 @@ public class RecipeActivity extends AppCompatActivity {
                 //RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
                 Item item0 = new Item();
                 item0.setItemName("Smör");
-                item0.setId(0);
+                //item0.setId(0);
+                item0.setId(realm);
                 items.add(item0.getItemName());
                 Item item1 = new Item();
                 item1.setItemName("Mjölk");
-                item1.setId(1);
+                //item1.setId(1);
+                item1.setId(realm);
                 items.add(item1.getItemName());
                 Item item2 = new Item();
                 item2.setItemName("Vetemjöl");
-                item2.setId(2);
+                item2.setId(realm);
+                //item2.setId(2);
                 items.add(item2.getItemName());
                 Item item3 = new Item();
                 item3.setItemName("Jäst");
-                item3.setId(3);
+                item3.setId(realm);
+                //item3.setId(3);
                 items.add(item3.getItemName());
 
                 RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);

@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
     ShoppingListAdapter shoppingListAdapter;
     EditText nameEditTxt;
+    EditText amountEditTxt;
 
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
@@ -251,10 +252,11 @@ public class MainActivity extends AppCompatActivity {
     private void displayInputDialog()
     {
         Dialog d=new Dialog(this);
-        d.setTitle("Save To Realm");
+        d.setTitle("Ny Vara");
         d.setContentView(R.layout.shoppinglist_input_dialog);
 
-        nameEditTxt= (EditText) d.findViewById(R.id.nameEditText);
+        nameEditTxt = (EditText) d.findViewById(R.id.nameEditText);
+        amountEditTxt = (EditText) d.findViewById(R.id.amountEditText);
         Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -264,13 +266,16 @@ public class MainActivity extends AppCompatActivity {
                 //GET DATA
                 Item i = new Item();
                 i.setItemName(nameEditTxt.getText().toString());
+                i.setAmount(amountEditTxt.getText().toString());
+                i.setId(realm);
 
 
                 //SAVE
                 RealmHelper helper=new RealmHelper(realm);
-                helper.setId(i);
+                //helper.setId(i);
                 helper.save(i);
                 nameEditTxt.setText("");
+                amountEditTxt.setText("");
 
                 //REFRESH
                 items = helper.retrieve();

@@ -27,6 +27,7 @@ public class RealmHelper {
 
     }
 
+    /*
     public void setId(Item item) {
         realm.executeTransaction(r -> {
             Number currentId = realm.where(Item.class).max("id");
@@ -39,6 +40,8 @@ public class RealmHelper {
             item.setId(nextId);
         });
     }
+
+     */
 
     //READ
     public ArrayList<String> retrieve()
