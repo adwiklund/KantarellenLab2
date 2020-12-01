@@ -22,10 +22,15 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -47,9 +52,13 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView rv;
     ArrayList<String> items;
+    ArrayList<String> amounts;
+    ArrayList<String> categoryList;
     ShoppingListAdapter shoppingListAdapter;
+    ArrayAdapter categoryAdapter;
     EditText nameEditTxt;
     EditText amountEditTxt;
+    Spinner categorySpinner;
 
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
@@ -71,22 +80,44 @@ public class MainActivity extends AppCompatActivity {
 
         rv = (RecyclerView) findViewById(R.id.mainRecyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this));
+       // categorySpinner = (Spinner) findViewById(R.id.categorySpinner);
 
         Realm.init(this);
 
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-        //Realm.deleteRealm(config);
+        Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
 
         RealmHelper helper = new RealmHelper(realm);
-        items = helper.retrieve();
+        items = helper.retrieveItemNames();
+        amounts = helper.retrieveItemAmounts();
+        //categoryList = helper.retriveCategories();
 
-        shoppingListAdapter = new ShoppingListAdapter(this, items);
+        shoppingListAdapter = new ShoppingListAdapter(this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
+
+        /*
+        categoryAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList);
+        categorySpinner.setAdapter(categoryAdapter);
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, categoryList.get(i),Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+         */
+
 
 
 
@@ -209,8 +240,9 @@ public class MainActivity extends AppCompatActivity {
 
                 helper.delete();
 
-                items = helper.retrieve();
-                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this,items);
+                items = helper.retrieveItemNames();
+                amounts = helper.retrieveItemAmounts();
+                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
                 rv.setAdapter(shoppingListAdapter);
                 /*
 
@@ -254,10 +286,32 @@ public class MainActivity extends AppCompatActivity {
         Dialog d=new Dialog(this);
         d.setTitle("Ny Vara");
         d.setContentView(R.layout.shoppinglist_input_dialog);
+        RealmHelper helper=new RealmHelper(realm);
+        categoryList = helper.retriveCategories();
 
         nameEditTxt = (EditText) d.findViewById(R.id.nameEditText);
         amountEditTxt = (EditText) d.findViewById(R.id.amountEditText);
+        categorySpinner = (Spinner) d.findViewById(R.id.categorySpinner);
         Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
+
+        final Category[] category = new Category[1];
+
+
+        categoryAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList);
+        categorySpinner.setAdapter(categoryAdapter);
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, categoryList.get(i),Toast.LENGTH_SHORT).show();
+                category[0] = realm.where(Category.class).findAll().get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -268,19 +322,26 @@ public class MainActivity extends AppCompatActivity {
                 i.setItemName(nameEditTxt.getText().toString());
                 i.setAmount(amountEditTxt.getText().toString());
                 i.setId(realm);
+                Category selectedCategory = category[0];
+                i.setCategory(selectedCategory);
 
 
                 //SAVE
-                RealmHelper helper=new RealmHelper(realm);
+                //RealmHelper helper=new RealmHelper(realm);
                 //helper.setId(i);
                 helper.save(i);
                 nameEditTxt.setText("");
                 amountEditTxt.setText("");
 
                 //REFRESH
-                items = helper.retrieve();
-                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this,items);
+                items = helper.retrieveItemNames();
+                amounts = helper.retrieveItemAmounts();
+                categoryList = helper.retriveCategories();
+                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
+                categoryAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, categoryList);
                 rv.setAdapter(shoppingListAdapter);
+                categorySpinner.setAdapter(categoryAdapter);
+
 
             }
         });

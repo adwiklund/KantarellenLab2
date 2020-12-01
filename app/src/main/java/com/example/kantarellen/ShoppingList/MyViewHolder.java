@@ -10,10 +10,12 @@ import com.example.kantarellen.R;
 public class MyViewHolder extends RecyclerView.ViewHolder {
 
     TextView nameTxt;
+    TextView amountTxt;
 
     public MyViewHolder(View itemView) {
         super(itemView);
 
-        nameTxt= (TextView) itemView.findViewById(R.id.nameTxt);
+        nameTxt = (TextView) itemView.findViewById(R.id.nameTxt);
+        amountTxt = (TextView) itemView.findViewById(R.id.amountTxt);
     }
 }

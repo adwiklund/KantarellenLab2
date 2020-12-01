@@ -90,16 +90,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         //System.out.println("position after = " + categories.get(fromPosition).getPosition());
         //System.out.println("position after = " + categories.get(toPosition).getPosition());
 
-
+        //Category category1;
+        //Category category2;
 
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(data, i, i + 1);
 
+                swap(categories, i, i + 1);
+
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(data, i, i - 1);
+
+                swap(categories, i, i - 1);
+
             }
         }
         /*
@@ -152,6 +158,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         });
 
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public void swap(RealmResults<Category> categories, final int i, final int j) {
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                final int temp = categories.get(i).getPosition();
+                categories.get(i).setPosition(j);
+                categories.get(j).setPosition(temp);
+            }
+        });
     }
 
     @Override

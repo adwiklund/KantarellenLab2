@@ -10,16 +10,30 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Name"
             android:id="@+id/nameTxt"
+            android:padding="10dp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Name"
+            android:id="@+id/amountTxt"
             android:padding="10dp"
             android:textColor="@color/colorAccent"
             android:textStyle="bold"

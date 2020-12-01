@@ -1,5 +1,6 @@
 package com.example.kantarellen;
 
+import com.example.kantarellen.Category.Category;
 import com.example.kantarellen.Item;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class RealmHelper {
      */
 
     //READ
-    public ArrayList<String> retrieve()
+    public ArrayList<String> retrieveItemNames()
     {
         ArrayList<String> itemNames=new ArrayList<>();
         RealmResults<Item> items=realm.where(Item.class).findAll();
@@ -57,6 +58,30 @@ public class RealmHelper {
         }
 
         return itemNames;
+    }
+
+    public ArrayList<String> retrieveItemAmounts()
+    {
+        ArrayList<String> itemAmounts=new ArrayList<>();
+        RealmResults<Item> items=realm.where(Item.class).findAll();
+
+        for(Item i:items)
+        {
+            itemAmounts.add(i.getAmount());
+        }
+
+        return itemAmounts;
+    }
+
+    public ArrayList<String> retriveCategories() {
+        ArrayList<String> categories = new ArrayList<>();
+        RealmResults<Category> realmCategories = realm.where(Category.class).findAll();
+
+        for(Category c:realmCategories) {
+            categories.add(c.getCategoryName());
+        }
+
+        return categories;
     }
 
     //DELETE

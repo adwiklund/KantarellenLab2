@@ -15,11 +15,13 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
     Context c;
     ArrayList<String> items;
+    ArrayList<String> amounts;
 
 
-    public ShoppingListAdapter(Context c, ArrayList<String> items) {
+    public ShoppingListAdapter(Context c, ArrayList<String> items, ArrayList<String> amounts) {
         this.c = c;
         this.items = items;
+        this.amounts = amounts;
     }
 
     @Override
@@ -31,6 +33,7 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         holder.nameTxt.setText(items.get(position));
+        holder.amountTxt.setText(amounts.get(position));
 
     }
 
