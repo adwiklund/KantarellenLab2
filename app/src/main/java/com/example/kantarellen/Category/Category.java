@@ -13,7 +13,7 @@ public class Category extends RealmObject {
     @Index
     private String categoryName;
 
-    @PrimaryKey
+    @PrimaryKey @Index
     private long id;
 
     private RealmList<Item> items;

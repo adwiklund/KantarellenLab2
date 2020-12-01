@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kantarellen.Item;
 import com.example.kantarellen.R;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.Collections;
 
 import io.realm.Realm;
 
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> implements CategoryMoveCallback.ItemTouchHelperContract {
@@ -97,14 +99,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(data, i, i + 1);
 
-                swap(categories, i, i + 1);
+                //swap(categories, i, i + 1);
 
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(data, i, i - 1);
 
-                swap(categories, i, i - 1);
+                //swap(categories, i, i - 1);
 
             }
         }
@@ -161,6 +163,9 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     }
 
     public void swap(RealmResults<Category> categories, final int i, final int j) {
+
+
+
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -169,6 +174,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
                 categories.get(j).setPosition(temp);
             }
         });
+
+
     }
 
     @Override

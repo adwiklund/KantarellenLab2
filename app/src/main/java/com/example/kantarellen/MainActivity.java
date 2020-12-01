@@ -34,8 +34,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -87,10 +89,25 @@ public class MainActivity extends AppCompatActivity {
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-        Realm.deleteRealm(config);
+        //Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
+
+        /*
+        final RealmResults<Item> realmItems = realm.where(Item.class).findAll();
+        realmItems.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Item>>() {
+            @Override
+            public void onChange(RealmResults<Item> items, OrderedCollectionChangeSet changeSet) {
+                changeSet.getInsertions();
+                changeSet.getChanges();
+            }
+
+        });
+        
+         */
+
+
 
         RealmHelper helper = new RealmHelper(realm);
         items = helper.retrieveItemNames();

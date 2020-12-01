@@ -50,10 +50,14 @@ public class RealmHelper {
     public ArrayList<String> retrieveItemNames()
     {
         ArrayList<String> itemNames=new ArrayList<>();
-        RealmResults<Item> items=realm.where(Item.class).findAll();
+        RealmResults<Item> items=realm.where(Item.class).findAll().sort("category.position");
+
+
+
 
         for(Item i:items)
         {
+            System.out.println("Category Position = " + i.getCategory().getPosition());
             itemNames.add(i.getItemName());
         }
 
