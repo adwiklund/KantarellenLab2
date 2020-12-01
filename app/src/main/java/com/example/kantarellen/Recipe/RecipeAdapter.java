@@ -1,4 +1,4 @@
-package com.example.kantarellen;
+package com.example.kantarellen.Recipe;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.kantarellen.R;
 
 import java.util.ArrayList;
 

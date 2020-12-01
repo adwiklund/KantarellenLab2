@@ -1,14 +1,16 @@
-package com.example.kantarellen;
+package com.example.kantarellen.Category;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ItemMoveCallback extends ItemTouchHelper.Callback {
+import com.example.kantarellen.Category.CategoryAdapter;
+
+public class CategoryMoveCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperContract mAdapter;
 
-    public ItemMoveCallback(ItemTouchHelperContract adapter) {
+    public CategoryMoveCallback(ItemTouchHelperContract adapter) {
         mAdapter = adapter;
     }
 

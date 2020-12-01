@@ -1,5 +1,7 @@
 package com.example.kantarellen;
 
+import com.example.kantarellen.Category.Category;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.Index;

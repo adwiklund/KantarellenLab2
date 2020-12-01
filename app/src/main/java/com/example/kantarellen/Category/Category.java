@@ -1,4 +1,6 @@
-package com.example.kantarellen;
+package com.example.kantarellen.Category;
+
+import com.example.kantarellen.Item;
 
 import io.realm.Realm;
 import io.realm.RealmList;

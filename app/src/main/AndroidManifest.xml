@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CategoryActivity"
+        <activity android:name=".Category.CategoryActivity"
             android:launchMode="singleInstance"/>
-        <activity android:name=".RecipeActivity"
+        <activity android:name=".Recipe.RecipeActivity"
             android:launchMode="singleInstance"/>
         <activity android:name=".MyListActivity"
             android:launchMode="singleInstance"/>

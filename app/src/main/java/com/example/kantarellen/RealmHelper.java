@@ -1,5 +1,7 @@
 package com.example.kantarellen;
 
+import com.example.kantarellen.Item;
+
 import java.util.ArrayList;
 
 import io.realm.Realm;

@@ -1,7 +1,9 @@
-package com.example.kantarellen;
+package com.example.kantarellen.Recipe;
 
 import android.graphics.Bitmap;
 import android.media.Image;
+
+import com.example.kantarellen.Item;
 
 import javax.annotation.Nullable;
 

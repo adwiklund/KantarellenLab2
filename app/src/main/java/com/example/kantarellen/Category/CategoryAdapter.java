@@ -1,4 +1,4 @@
-package com.example.kantarellen;
+package com.example.kantarellen.Category;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -6,21 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.kantarellen.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 
 import io.realm.Realm;
 
-import io.realm.RealmList;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> implements ItemMoveCallback.ItemTouchHelperContract {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> implements CategoryMoveCallback.ItemTouchHelperContract {
 
     private ArrayList<String> data;
     Realm realm;
