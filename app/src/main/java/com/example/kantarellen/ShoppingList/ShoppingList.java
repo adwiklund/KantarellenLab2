@@ -13,7 +13,6 @@ public class ShoppingList extends RealmObject {
     @PrimaryKey
     private long id;
 
-    //private RealmList<Category> categories;
 
     private RealmList<Item> items;
 
@@ -24,16 +23,6 @@ public class ShoppingList extends RealmObject {
     public void setId(long id) {
         this.id = id;
     }
-/*
-    public RealmList<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(RealmList<Category> categories) {
-        this.categories = categories;
-    }
-
- */
 
     public RealmList<Item> getItems() {
         return items;

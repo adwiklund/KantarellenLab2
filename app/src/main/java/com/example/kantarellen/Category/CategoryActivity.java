@@ -96,21 +96,6 @@ public class CategoryActivity extends AppCompatActivity {
         }
 
 
-        /*
-        categoryArrayList.add("Frukt & Grönt");
-        categoryArrayList.add("Fisk");
-        categoryArrayList.add("Kött");
-        categoryArrayList.add("Mejeriprodukter");
-        categoryArrayList.add("Städprodukter");
-        categoryArrayList.add("Godis & Glass");
-        categoryArrayList.add("Drycker");
-        categoryArrayList.add("Snacks");
-        categoryArrayList.add("Barnprodukter");
-        categoryArrayList.add("Kaffe & Te");
-
-         */
-
-
         mAdapter = new CategoryAdapter(categoryArrayList);
 
         ItemTouchHelper.Callback callback =

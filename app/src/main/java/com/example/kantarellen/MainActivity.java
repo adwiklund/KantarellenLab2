@@ -44,13 +44,9 @@ import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
-    ListView listView;
-    private String m_Text = "";
     Realm realm;
     private RealmResults<Category> categories;
     ArrayList<String> shoppinglist;
-    //RealmChangeListener realmChangeListener;
-    //Category currentCat;
 
     RecyclerView rv;
     ArrayList<String> items;
@@ -95,111 +91,18 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
 
-        /*
-        final RealmResults<Item> realmItems = realm.where(Item.class).findAll();
-        realmItems.addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<Item>>() {
-            @Override
-            public void onChange(RealmResults<Item> items, OrderedCollectionChangeSet changeSet) {
-                changeSet.getInsertions();
-                changeSet.getChanges();
-            }
-
-        });
-
-         */
-
-
 
         helper = new RealmHelper(realm);
         items = helper.retrieveItemNames();
         amounts = helper.retrieveItemAmounts();
-        //categoryList = helper.retriveCategories();
 
         shoppingListAdapter = new ShoppingListAdapter(this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
 
-        /*
-        categoryAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList);
-        categorySpinner.setAdapter(categoryAdapter);
-
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this, categoryList.get(i),Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-         */
-
-
-
-
-
-        System.out.println("path: " + realm.getPath());
-
         setupCategories();
-
-        /*
-        shoppinglist = new ArrayList<>();
-
-        ShoppingList realmShopList = realm.where(ShoppingList.class).findFirst();
-
-        if(realmShopList == null) {
-            realm.executeTransaction(r -> {
-                ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
-                RealmList<Item> list = new RealmList<>();
-                newShopList.setItems(list);
-            });
-        } else {
-            realm.executeTransaction(r -> {
-                //ShoppingList realmShopList = realm.where(ShoppingList.class).findFirst();
-                for(int i = 0; i < realmShopList.getItems().size(); i++) {
-                    shoppinglist.add(realmShopList.getItems().get(i).getItemName());
-                }
-            });
-        }
-
-         */
-
 
         categories = realm.where(Category.class).findAllAsync();
         categories.addChangeListener(realmChangeListener);
-
-        //mapPopup = new MapPopup();
-
-        /*
-        listView = (ListView) findViewById(R.id.mobile_list);
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, shoppinglist);
-
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                TextView row = (TextView) view;
-
-                if(row.getPaintFlags() == 0 || row.getPaintFlags() == 1281) {
-                    row.setPaintFlags(row.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                } else {
-                    row.setPaintFlags(0);
-                }
-
-            }
-
-        });
-
-         */
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -207,46 +110,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 displayInputDialog();
-
-                /*
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Ny vara");
-
-                // Set up the input
-                final EditText input = new EditText(MainActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_AUTO_CORRECT);
-                builder.setView(input);
-
-                // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        m_Text = input.getText().toString();
-
-                        Item item = realm.where(Item.class).equalTo("itemName", m_Text).findFirst();
-
-                        if(item != null) {
-                            System.out.println("Yes it does");
-                            shoppinglist.add(item.getItemName());
-                            //if(item.getCategory() != )
-                        } else {
-                            addItem(m_Text);
-
-                        }
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-
-                 */
 
             }
         });
@@ -262,37 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 amounts = helper.retrieveItemAmounts();
                 shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
                 rv.setAdapter(shoppingListAdapter);
-                /*
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Rensa listan?");
-
-                // Set up the buttons
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        realm.executeTransaction(r -> {
-                            ShoppingList newshoppingList = realm.where(ShoppingList.class).findFirst();
-                            RealmList<Item> items = newshoppingList.getItems();
-                            items.deleteAllFromRealm();
-                            shoppinglist.removeAll(shoppinglist);
-                            //recreate();
-                            shoppinglist.clear();
-                            adapter.notifyDataSetChanged();
-                        });
-
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
-
-                 */
 
             }
         });
@@ -367,112 +199,15 @@ public class MainActivity extends AppCompatActivity {
         d.show();
     }
 
-    public void addItem(String itemName) {
-
-        ShoppingList realmShoppingList = realm.where(ShoppingList.class).findFirst();
-        if(realmShoppingList == null) {
-            createShoppingList();
-            addItem(itemName);
-        }
-        if(realmShoppingList.getItems() == null) {
-            RealmList<Item> list = new RealmList<>();
-            realmShoppingList.setItems(list);
-        }
-
-        realm.executeTransaction(r -> {
-            Number currentId = realm.where(Item.class).max("id");
-            int nextId = 0;
-            if(currentId == null) {
-                nextId = 1;
-            } else {
-                nextId = currentId.intValue() + 1;
-            }
-            Item item = r.createObject(Item.class, nextId);
-            item.setItemName(itemName);
-            chooseItemCategory(item);
-
-            //item.setCategory(currentCat);
-            //shoppinglist.add(item.getItemName());
-
-        });
-    }
-
     private void setItemCategory(Category category, Item item) {
-        //currentCat = category;
         realm.executeTransaction(r -> {
             item.setCategory(category);
         });
-        //item.setCategory(category);
         shoppinglist.add(item.getItemName());
-    }
-
-    private void chooseItemCategory(Item item) {
-
-        //final Category[] cat = new Category[1];
-
-        RealmResults<Category> categories = realm.where(Category.class).findAll();
-        String[] categoryArray = new String[categories.size()];
-        for(int i = 0; i < categories.size(); i++) {
-            //Category category = categories.get(i).get
-            categoryArray[i] = categories.get(i).getCategoryName();
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Välj varans kategori");
-        builder.setItems(categoryArray, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setItemCategory(categories.get(which), item);
-
-            }
-        });
-        builder.show();
-
-    }
-
-    public void createShoppingList() {
-        realm.executeTransaction(r -> {
-            ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
-            RealmList<Item> list = new RealmList<>();
-            newShopList.setItems(list);
-        });
     }
 
 
     public void setupCategories() {
-        /*
-        ArrayList<String> categoryList = new ArrayList<>();
-        RealmResults<Category> categories = realm.where(Category.class).findAll();
-        if(categories == null) {
-            categoryList.add("Frukt & Grönt");
-            categoryList.add("Fisk");
-            categoryList.add("Kött");
-            categoryList.add("Mejeriprodukter");
-            categoryList.add("Städprodukter");
-            categoryList.add("Godis & Glass");
-            categoryList.add("Drycker");
-            categoryList.add("Snacks");
-            categoryList.add("Barnprodukter");
-            categoryList.add("Kaffe & Te");
-
-            realm.executeTransaction(r -> {
-                if(r.isEmpty()) {
-                    for(int i = 0; i < categoryList.size(); i++) {
-                        Category category = r.createObject(Category.class, i);
-                        category.setCategoryName(categoryList.get(i));
-                        category.setPosition(i);
-                    }
-                }
-
-            });
-        } else {
-            Number maxId = categories.max("id");
-            for(int i = 0; i < maxId.intValue(); i++) {
-                categoryList.add(categories.get(i).getCategoryName());
-            }
-        }
-
-         */
 
         ArrayList<String> categoryList = new ArrayList<>();
         categoryList.add("Frukt & Grönt");
@@ -496,7 +231,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
 
     }
 
