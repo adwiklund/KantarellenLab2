@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     EditText nameEditTxt;
     EditText amountEditTxt;
     Spinner categorySpinner;
+    RealmHelper helper;
 
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-        //Realm.deleteRealm(config);
+        Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
@@ -104,12 +105,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-        
+
          */
 
 
 
-        RealmHelper helper = new RealmHelper(realm);
+        helper = new RealmHelper(realm);
         items = helper.retrieveItemNames();
         amounts = helper.retrieveItemAmounts();
         //categoryList = helper.retriveCategories();
@@ -497,6 +498,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        items = helper.retrieveItemNames();
+        amounts = helper.retrieveItemAmounts();
+        shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
+        rv.setAdapter(shoppingListAdapter);
     }
 
     @Override

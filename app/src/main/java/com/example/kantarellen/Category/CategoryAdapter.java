@@ -99,14 +99,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(data, i, i + 1);
 
-                //swap(categories, i, i + 1);
+                swap(categories, i, i + 1);
 
             }
         } else {
             for (int i = fromPosition; i > toPosition; i--) {
                 Collections.swap(data, i, i - 1);
 
-                //swap(categories, i, i - 1);
+                swap(categories, i, i - 1);
 
             }
         }
@@ -130,6 +130,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
          */
 
+        /*
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
@@ -137,27 +138,16 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
                 //RealmResults<Item> items = realm.where(Item.class).contains("category", i)
                 for(int i = 0; i < number.intValue(); i++) {
                     //RealmResults<Item> items = realm.where(Item.class).contains("category", categories.get(i).getCategoryName()).findAll();
-                    /*
-                    RealmResults<Item> items = realm.where(Item.class).equalTo("category.id", i).findAll();
-                    if(items.size() > 0) {
-                        System.out.println("items = " + items.get(i));
-                    }
 
-                     */
 
                     categories.get(i).setCategoryName(data.get(i));
 
-                    /*
-                    //RealmResults<Item> items = realm.where(Item.class).contains("category", categories.get(i).getCategoryName()).findAll();
-                    for(int j = 0; j < items.size(); j++) {
-                        System.out.println("Here");
-                        items.get(j).setCategory(categories.get(i));
-                    }
 
-                     */
                 }
             }
         });
+
+         */
 
         notifyItemMoved(fromPosition, toPosition);
     }

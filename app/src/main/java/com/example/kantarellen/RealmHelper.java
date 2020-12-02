@@ -50,14 +50,15 @@ public class RealmHelper {
     public ArrayList<String> retrieveItemNames()
     {
         ArrayList<String> itemNames=new ArrayList<>();
-        RealmResults<Item> items=realm.where(Item.class).findAll().sort("category.position");
+        RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
 
-
+        //Item test = realm.where(Item.class).contains("category.categoryName", "Kött").findFirst();
+        //if(test != null) System.out.println("Test = " + test.getItemName() + " position = " + test.getCategory().getPosition());
 
 
         for(Item i:items)
         {
-            System.out.println("Category Position = " + i.getCategory().getPosition());
+            //System.out.println("Category Position = " + i.getCategory().getPosition());
             itemNames.add(i.getItemName());
         }
 
@@ -67,7 +68,7 @@ public class RealmHelper {
     public ArrayList<String> retrieveItemAmounts()
     {
         ArrayList<String> itemAmounts=new ArrayList<>();
-        RealmResults<Item> items=realm.where(Item.class).findAll();
+        RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
 
         for(Item i:items)
         {
@@ -79,7 +80,7 @@ public class RealmHelper {
 
     public ArrayList<String> retriveCategories() {
         ArrayList<String> categories = new ArrayList<>();
-        RealmResults<Category> realmCategories = realm.where(Category.class).findAll();
+        RealmResults<Category> realmCategories = realm.where(Category.class).sort("position").findAll();
 
         for(Category c:realmCategories) {
             categories.add(c.getCategoryName());
