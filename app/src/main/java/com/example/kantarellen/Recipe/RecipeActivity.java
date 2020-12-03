@@ -26,10 +26,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.kantarellen.Category.Category;
 import com.example.kantarellen.Category.CategoryActivity;
 import com.example.kantarellen.Item;
 import com.example.kantarellen.MainActivity;
 import com.example.kantarellen.R;
+import com.example.kantarellen.RealmHelper;
 import com.example.kantarellen.ShoppingList.ShoppingList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -176,11 +178,54 @@ public class RecipeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+                        RealmHelper helper = new RealmHelper(realm);
+
+                        //Item i = new Item();
+                        /*
+                        i.setItemName(nameEditTxt.getText().toString());
+                        i.setAmount(amountEditTxt.getText().toString());
+                        i.setId(realm);
+                        Category selectedCategory = category[0];
+                        i.setCategory(selectedCategory);
+
+                         */
+
+                        Item i0 = new Item();
+                        i0.setItemName(item0.getItemName());
+                        i0.setAmount("100 g");
+                        i0.setId(realm);
+                        helper.save(i0);
+                        Item i1 = new Item();
+                        i1.setItemName(item1.getItemName());
+                        i1.setAmount("1 liter");
+                        i1.setId(realm);
+                        helper.save(i1);
+                        Item i2 = new Item();
+                        i2.setItemName(item2.getItemName());
+                        i2.setAmount("8 dl");
+                        i2.setId(realm);
+                        helper.save(i2);
+                        Item i3 = new Item();
+                        i3.setItemName(item3.getItemName());
+                        i3.setAmount("50g");
+                        i3.setId(realm);
+                        helper.save(i3);
 
 
+                        /*
+                        helper.save(item0);
+                        helper.save(item1);
+                        helper.save(item2);
+                        helper.save(item3);
+
+                         */
+
+                        /*
                         assert shoppingList != null;
                         RealmList<Item> realmItems = shoppingList.getItems();
                         realm.executeTransaction(r -> {
+
+
 
                             realmItems.add(0, item0);
                             realmItems.add(1, item1);
@@ -188,6 +233,8 @@ public class RecipeActivity extends AppCompatActivity {
                             realmItems.add(3, item3);
                             shoppingList.setItems(realmItems);
                         });
+
+                         */
                         /*
                         ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
                         RealmList<Item> shoppingListItems = shoppingList.getItems();
