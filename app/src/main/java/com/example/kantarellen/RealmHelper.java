@@ -2,10 +2,12 @@ package com.example.kantarellen;
 
 import com.example.kantarellen.Category.Category;
 import com.example.kantarellen.Item;
+import com.example.kantarellen.ShoppingList.ShoppingList;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class RealmHelper {
@@ -28,6 +30,16 @@ public class RealmHelper {
             }
         });
 
+    }
+
+    public void fillShoppingList(ShoppingList shoppingList) {
+        RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
+        RealmList<Item> listItems = new RealmList<>();
+        for(Item i:items) {
+            listItems.add(i);
+
+        }
+        shoppingList.setItems(listItems);
     }
 
     /*

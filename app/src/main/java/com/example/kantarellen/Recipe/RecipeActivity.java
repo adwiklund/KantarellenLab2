@@ -30,6 +30,7 @@ import com.example.kantarellen.Category.CategoryActivity;
 import com.example.kantarellen.Item;
 import com.example.kantarellen.MainActivity;
 import com.example.kantarellen.R;
+import com.example.kantarellen.ShoppingList.ShoppingList;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
@@ -39,6 +40,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 //http://www.technotalkative.com/android-gridview-example/
@@ -51,6 +53,7 @@ public class RecipeActivity extends AppCompatActivity {
     private RecipeAdapter mAdapter;
     private ArrayList<String> listRecipe;
     private ArrayList<Bitmap> listRecipePicture;
+    private ArrayList<String> listRecipeInstructions;
     private String m_Text = "";
     Realm realm;
     byte[] byteArray;
@@ -96,41 +99,28 @@ public class RecipeActivity extends AppCompatActivity {
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
                 Button btnAdd = view.findViewById(R.id.btnAdd);
 
-                System.out.println("position = " + position);
-
                 Recipe recipe = realm.where(Recipe.class).equalTo("id", position+1).findFirst();
 
-                System.out.println("id = " + recipe.getId());
-                System.out.println("bitmapData = " + recipe.getImage());
-                System.out.println("bitmapData length = " + recipe.getImage().length);
-
-
                 textView.setText(recipe.getName());
-
-                //Recipe test = realm.where(Recipe.class).findFirst();
-                //Bitmap testBitmap = createBitmap(test.getImage());
-                //imageView.setImageBitmap(testBitmap);
-
-                //Bitmap bitmap = createBitmap(recipe.getImage());
-                //imageView.setImageBitmap(bitmap);
-
-                System.out.println("listRecipePicture size = " + listRecipePicture.size());
 
                 Bitmap bitmap = BitmapFactory.decodeByteArray(recipe.getImage(), 0, recipe.getImage().length);
                 bitmap = rotateImage(90, bitmap);
 
-                //imageView.setImageBitmap(listRecipePicture.get(0));
                 imageView.setImageBitmap(bitmap);
 
                 /*
-                ArrayList<String> itemArrayList = new ArrayList<>();
-
-                itemArrayList.add("Smör");
-                itemArrayList.add("Ägg");
-                itemArrayList.add("Mjöl");
-                itemArrayList.add("Socker");
+                recipe.setInstructions("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
+                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
+                        "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
+                        "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
+                        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia " +
+                        "deserunt mollit anim id est laborum.");
 
                  */
+
+                instructionTextView.setText(recipe.getInstructions());
+
 
                 items = new ArrayList<>();
 
@@ -160,21 +150,17 @@ public class RecipeActivity extends AppCompatActivity {
 
                 rvItems.setAdapter(itemAdapter);
                 rvItems.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
+
                 /*
-                CategoryAdapter itemAdapter = new CategoryAdapter(itemArrayList);
-
-                listView.setAdapter((ListAdapter) itemAdapter);
-
-                 */
-
-
-                instructionTextView.setText("\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
+                instructionTextView.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
                         "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
                         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
                         "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
                         "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
                         "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia " +
-                        "deserunt mollit anim id est laborum.\"");
+                        "deserunt mollit anim id est laborum.");
+
+                 */
 
                 //btnContinue.setText("string");
 
@@ -189,6 +175,19 @@ public class RecipeActivity extends AppCompatActivity {
                 btnAdd.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+
+
+                        assert shoppingList != null;
+                        RealmList<Item> realmItems = shoppingList.getItems();
+                        realm.executeTransaction(r -> {
+
+                            realmItems.add(0, item0);
+                            realmItems.add(1, item1);
+                            realmItems.add(2, item2);
+                            realmItems.add(3, item3);
+                            shoppingList.setItems(realmItems);
+                        });
                         /*
                         ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
                         RealmList<Item> shoppingListItems = shoppingList.getItems();
@@ -289,6 +288,7 @@ public class RecipeActivity extends AppCompatActivity {
     {
         listRecipe = new ArrayList<String>();
         listRecipePicture = new ArrayList<Bitmap>();
+        listRecipeInstructions = new ArrayList<String>();
 
         RealmResults<Recipe> recipes = realm.where(Recipe.class).findAll();
 
@@ -308,6 +308,8 @@ public class RecipeActivity extends AppCompatActivity {
                     bitmap = rotateImage(90, bitmap);
 
                     listRecipePicture.add(bitmap);
+
+                    listRecipeInstructions.add(recipes.get(i).getInstructions());
                 }
 
             });
@@ -337,6 +339,9 @@ public class RecipeActivity extends AppCompatActivity {
             recipe.setImage(imageId);
             //recipe.setImage(encodeImage);
 
+            String testInstructions = "Test Instructions";
+            recipe.setInstructions(testInstructions);
+
             listRecipe.add(name);
 
             //Bitmap bitmap = BitmapFactory.decodeByteArray(imageId, 0, imageId.length);
@@ -352,6 +357,8 @@ public class RecipeActivity extends AppCompatActivity {
 
             //Bitmap bitmap = createBitmap(imageId);
             listRecipePicture.add(bitmap);
+
+            listRecipeInstructions.add(testInstructions);
 
             //ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
             //RealmList<Item> list = new RealmList<>();

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     Realm realm;
     private RealmResults<Category> categories;
-    ArrayList<String> shoppinglist;
+    //ArrayList<String> shoppinglist;
 
     RecyclerView rv;
     ArrayList<String> items;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     EditText amountEditTxt;
     Spinner categorySpinner;
     RealmHelper helper;
+    ShoppingList shoppingList;
 
 
     private final OrderedRealmCollectionChangeListener<RealmResults<Category>> realmChangeListener = (people, changeSet) -> {
@@ -91,10 +92,20 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
 
+        realm.executeTransaction(r -> {
+                    shoppingList = realm.createObject(ShoppingList.class, 1);
+                });
+        RealmList<Item> tempList = new RealmList<>();
+        shoppingList.setItems(tempList);
 
         helper = new RealmHelper(realm);
+        helper.fillShoppingList(shoppingList);
         items = helper.retrieveItemNames();
         amounts = helper.retrieveItemAmounts();
+
+
+        //RealmResults<Item> realmItems = realm.where(Item.class).findAll();
+        //shoppingList.setItems(realmItems);
 
         shoppingListAdapter = new ShoppingListAdapter(this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
@@ -199,12 +210,15 @@ public class MainActivity extends AppCompatActivity {
         d.show();
     }
 
+    /*
     private void setItemCategory(Category category, Item item) {
         realm.executeTransaction(r -> {
             item.setCategory(category);
         });
         shoppinglist.add(item.getItemName());
     }
+
+     */
 
 
     public void setupCategories() {

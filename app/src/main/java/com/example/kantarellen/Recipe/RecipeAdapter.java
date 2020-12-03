@@ -19,12 +19,14 @@ public class RecipeAdapter extends BaseAdapter
 {
     private ArrayList<String> listRecipe;
     private ArrayList<Bitmap> listRecipePicture;
+   //private ArrayList<String> recipeInstructions;
     private Activity activity;
 
     public RecipeAdapter(Activity activity, ArrayList<String> listRecipe, ArrayList<Bitmap> listRecipePicture) {
         super();
         this.listRecipe = listRecipe;
         this.listRecipePicture = listRecipePicture;
+        //this.recipeInstructions = recipeInstructions;
         this.activity = activity;
     }
 
@@ -47,6 +49,7 @@ public class RecipeAdapter extends BaseAdapter
     {
         public ImageView imgViewFlag;
         public TextView txtViewTitle;
+        //public TextView txtViewInstruction;
     }
 
     @Override
@@ -61,6 +64,7 @@ public class RecipeAdapter extends BaseAdapter
 
             view.txtViewTitle = (TextView) convertView.findViewById(R.id.textView1);
             view.imgViewFlag = (ImageView) convertView.findViewById(R.id.imageView1);
+            //view.txtViewInstruction = (TextView) convertView.findViewById(R.id.instructionTextView);
 
             convertView.setTag(view);
         }
@@ -73,6 +77,7 @@ public class RecipeAdapter extends BaseAdapter
 
         //view.imgViewFlag.setImageResource(listRecipePicture.get(position));
         view.imgViewFlag.setImageBitmap(listRecipePicture.get(position));
+        //view.txtViewInstruction.setText(recipeInstructions.get(position));
 
         return convertView;
     }
