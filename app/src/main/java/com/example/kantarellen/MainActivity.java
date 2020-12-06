@@ -1,8 +1,6 @@
 package com.example.kantarellen;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -26,18 +24,14 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -87,16 +81,26 @@ public class MainActivity extends AppCompatActivity {
         //Realm.deleteRealm(Realm.getDefaultConfiguration());
 
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
-        Realm.deleteRealm(config);
+        //Realm.deleteRealm(config);
 
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
 
-        realm.executeTransaction(r -> {
-                    shoppingList = realm.createObject(ShoppingList.class, 1);
-                });
+        shoppingList = realm.where(ShoppingList.class).findFirst();
+
+        if(shoppingList.getId() != 1) {
+            realm.executeTransaction(r -> {
+                shoppingList = realm.createObject(ShoppingList.class, 1);
+            });
+        }
+
+        /*
         RealmList<Item> tempList = new RealmList<>();
-        shoppingList.setItems(tempList);
+        realm.executeTransaction(r -> {
+                    shoppingList.setItems(tempList);
+                });
+                
+         */
 
         helper = new RealmHelper(realm);
         helper.fillShoppingList(shoppingList);
@@ -148,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         d.setTitle("Ny Vara");
         d.setContentView(R.layout.shoppinglist_input_dialog);
         RealmHelper helper=new RealmHelper(realm);
-        categoryList = helper.retriveCategories();
+        categoryList = helper.retrieveCategories();
 
         nameEditTxt = (EditText) d.findViewById(R.id.nameEditText);
         amountEditTxt = (EditText) d.findViewById(R.id.amountEditText);
@@ -197,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                 //REFRESH
                 items = helper.retrieveItemNames();
                 amounts = helper.retrieveItemAmounts();
-                categoryList = helper.retriveCategories();
+                categoryList = helper.retrieveCategories();
                 shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
                 categoryAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, categoryList);
                 rv.setAdapter(shoppingListAdapter);
@@ -235,9 +239,23 @@ public class MainActivity extends AppCompatActivity {
         categoryList.add("Barnprodukter");
         categoryList.add("Kaffe & Te");
 
+        RealmResults<Category> realmCategories = realm.where(Category.class).findAll();
+
+        if(realmCategories.size() == 0) {
+            realm.executeTransaction(r -> {
+                for (int i = 0; i < categoryList.size(); i++) {
+                    Category category = r.createObject(Category.class, i);
+                    category.setCategoryName(categoryList.get(i));
+                    category.setPosition(i);
+                }
+            });
+        }
+
+/*
         realm.executeTransaction(r -> {
             if(r.isEmpty()) {
                 for(int i = 0; i < categoryList.size(); i++) {
+                    System.out.println("here2");
                     Category category = r.createObject(Category.class, i);
                     category.setCategoryName(categoryList.get(i));
                     category.setPosition(i);
@@ -245,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+
+ */
 
     }
 

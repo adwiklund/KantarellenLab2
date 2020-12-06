@@ -39,7 +39,9 @@ public class RealmHelper {
             listItems.add(i);
 
         }
-        shoppingList.setItems(listItems);
+        realm.executeTransaction(r -> {
+            shoppingList.setItems(listItems);
+        });
     }
 
     /*
@@ -90,7 +92,7 @@ public class RealmHelper {
         return itemAmounts;
     }
 
-    public ArrayList<String> retriveCategories() {
+    public ArrayList<String> retrieveCategories() {
         ArrayList<String> categories = new ArrayList<>();
         RealmResults<Category> realmCategories = realm.where(Category.class).sort("position").findAll();
 
