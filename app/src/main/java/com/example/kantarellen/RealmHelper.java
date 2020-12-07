@@ -113,14 +113,18 @@ public class RealmHelper {
     //DELETE
     public void delete() {
         RealmResults<Item> items = realm.where(Item.class).findAll();
+        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-
+                shoppingList.getItems().clear();
+                /*
                 for(Item i:items) {
                     i.deleteFromRealm();
                 }
+
+                 */
             }
         });
 
