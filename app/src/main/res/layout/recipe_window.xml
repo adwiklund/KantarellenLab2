@@ -107,6 +107,13 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
  />
 
+    <Button
+        android:id="@+id/btnAddIngredient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lägg till ingrediens"
+        />
+
     <TextView
         android:id="@+id/instructionTextView"
         android:layout_width="match_parent"
@@ -116,7 +123,7 @@
         />
 
     <Button
-        android:id="@+id/btnAdd"
+        android:id="@+id/btnAddToList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Lägg till i listan"

@@ -2,6 +2,7 @@ package com.example.kantarellen.Recipe;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,12 +15,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -33,6 +37,7 @@ import com.example.kantarellen.MainActivity;
 import com.example.kantarellen.R;
 import com.example.kantarellen.RealmHelper;
 import com.example.kantarellen.ShoppingList.ShoppingList;
+import com.example.kantarellen.ShoppingList.ShoppingListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
@@ -62,6 +67,7 @@ public class RecipeActivity extends AppCompatActivity {
     private ArrayList<String> items;
 
     private GridView gridView;
+    RealmList<Item> recipeItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,9 +103,10 @@ public class RecipeActivity extends AppCompatActivity {
                 TextView textView = view.findViewById(R.id.textView);
                 //ListView listView = view.findViewById(R.id.list);
                 RecyclerView rvItems = view.findViewById(R.id.rvItems);
+                Button btnAddIngredient = view.findViewById(R.id.btnAddIngredient);
                 TextView instructionTextView = view.findViewById(R.id.instructionTextView);
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
-                Button btnAdd = view.findViewById(R.id.btnAdd);
+                Button btnAddToList = view.findViewById(R.id.btnAddToList);
 
                 Recipe recipe = realm.where(Recipe.class).equalTo("id", position+1).findFirst();
 
@@ -123,9 +130,21 @@ public class RecipeActivity extends AppCompatActivity {
 
                 instructionTextView.setText(recipe.getInstructions());
 
+                recipeItems = recipe.getItems();
 
                 items = new ArrayList<>();
 
+                //RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
+                RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
+
+                btnAddIngredient.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View view) {
+                       displayInputDialog();
+                   }
+                });
+
+                /*
                 //RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
                 Item item0 = new Item();
                 item0.setItemName("Smör");
@@ -148,7 +167,9 @@ public class RecipeActivity extends AppCompatActivity {
                 //item3.setId(3);
                 items.add(item3.getItemName());
 
-                RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
+                 */
+
+                //RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
 
                 rvItems.setAdapter(itemAdapter);
                 rvItems.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
@@ -174,21 +195,17 @@ public class RecipeActivity extends AppCompatActivity {
                     }
                 });
                 */
-                btnAdd.setOnClickListener(new View.OnClickListener() {
+                btnAddToList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+                        //ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
                         RealmHelper helper = new RealmHelper(realm);
 
-                        //Item i = new Item();
-                        /*
-                        i.setItemName(nameEditTxt.getText().toString());
-                        i.setAmount(amountEditTxt.getText().toString());
-                        i.setId(realm);
-                        Category selectedCategory = category[0];
-                        i.setCategory(selectedCategory);
+                        for(Item i : recipeItems) {
+                            helper.save(i);
+                        }
 
-                         */
+                        /*
 
                         Item i0 = new Item();
                         i0.setItemName(item0.getItemName());
@@ -210,6 +227,8 @@ public class RecipeActivity extends AppCompatActivity {
                         i3.setAmount("50g");
                         i3.setId(realm);
                         helper.save(i3);
+
+                         */
 
 
                         /*
@@ -419,6 +438,81 @@ public class RecipeActivity extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(bitmapSrc, 0, 0,
                 bitmapSrc.getWidth(), bitmapSrc.getHeight(), matrix, true);
+    }
+
+    private void displayInputDialog()
+    {
+        Dialog d=new Dialog(this);
+        d.setTitle("Ny Vara");
+        d.setContentView(R.layout.shoppinglist_input_dialog);
+        RealmHelper helper=new RealmHelper(realm);
+        ArrayList<String> categoryList = helper.retrieveCategories();
+
+        EditText nameEditTxt = (EditText) d.findViewById(R.id.nameEditText);
+        EditText amountEditTxt = (EditText) d.findViewById(R.id.amountEditText);
+        Spinner categorySpinner = (Spinner) d.findViewById(R.id.categorySpinner);
+        Button saveBtn= (Button) d.findViewById(R.id.saveBtn);
+
+        final Category[] category = new Category[1];
+
+
+        ArrayAdapter categoryAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryList);
+        categorySpinner.setAdapter(categoryAdapter);
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(RecipeActivity.this, categoryList.get(i),Toast.LENGTH_SHORT).show();
+                category[0] = realm.where(Category.class).findAll().get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //GET DATA
+                Item i = new Item();
+                i.setItemName(nameEditTxt.getText().toString());
+                i.setAmount(amountEditTxt.getText().toString());
+                i.setId(realm);
+                Category selectedCategory = category[0];
+                i.setCategory(selectedCategory);
+
+
+                //SAVE
+                //RealmHelper helper=new RealmHelper(realm);
+                //helper.setId(i);
+                realm.executeTransaction(r -> {
+                            recipeItems.add(i);
+                        });
+                //helper.save(i);
+                items.add(i.getItemName());
+                nameEditTxt.setText("");
+                amountEditTxt.setText("");
+
+                /*
+                //REFRESH
+                items = helper.retrieveItemNames();
+                amounts = helper.retrieveItemAmounts();
+                categoryList = helper.retrieveCategories();
+                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
+                categoryAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, categoryList);
+                rv.setAdapter(shoppingListAdapter);
+                categorySpinner.setAdapter(categoryAdapter);
+
+                 */
+
+
+            }
+        });
+
+        d.show();
     }
 
     @Override

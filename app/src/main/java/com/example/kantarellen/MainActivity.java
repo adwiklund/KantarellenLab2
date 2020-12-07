@@ -87,19 +87,26 @@ public class MainActivity extends AppCompatActivity {
         //realm = Realm.getDefaultInstance();
 
         shoppingList = realm.where(ShoppingList.class).findFirst();
-
+        if(shoppingList == null) {
+            realm.executeTransaction(r -> {
+                shoppingList = realm.createObject(ShoppingList.class, 1);
+            });
+        }
+        /*
         if(shoppingList.getId() != 1) {
             realm.executeTransaction(r -> {
                 shoppingList = realm.createObject(ShoppingList.class, 1);
             });
         }
 
+         */
+
         /*
         RealmList<Item> tempList = new RealmList<>();
         realm.executeTransaction(r -> {
                     shoppingList.setItems(tempList);
                 });
-                
+
          */
 
         helper = new RealmHelper(realm);
@@ -195,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 //RealmHelper helper=new RealmHelper(realm);
                 //helper.setId(i);
                 helper.save(i);
+
                 nameEditTxt.setText("");
                 amountEditTxt.setText("");
 

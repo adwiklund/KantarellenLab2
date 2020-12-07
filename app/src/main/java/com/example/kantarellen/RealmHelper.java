@@ -25,7 +25,12 @@ public class RealmHelper {
             @Override
             public void execute(Realm realm) {
 
-                Item s=realm.copyToRealm(item);
+                Item i = realm.copyToRealm(item);
+                ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+                RealmList<Item> listItems = shoppingList.getItems();
+                listItems.add(i);
+                shoppingList.setItems(listItems);
+
 
             }
         });
@@ -64,7 +69,9 @@ public class RealmHelper {
     public ArrayList<String> retrieveItemNames()
     {
         ArrayList<String> itemNames=new ArrayList<>();
-        RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
+        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+        RealmResults<Item> items = shoppingList.getItems().sort("category.position");
+        //RealmResults<Item> items = realm.where(Item.class).sort("category.position").findAll();
 
         //Item test = realm.where(Item.class).contains("category.categoryName", "Kött").findFirst();
         //if(test != null) System.out.println("Test = " + test.getItemName() + " position = " + test.getCategory().getPosition());
