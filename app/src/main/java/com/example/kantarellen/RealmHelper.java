@@ -38,7 +38,9 @@ public class RealmHelper {
     }
 
     public void fillShoppingList(ShoppingList shoppingList) {
-        RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
+
+        //RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
+        RealmResults<Item> items = shoppingList.getItems().sort("category.position");
         RealmList<Item> listItems = new RealmList<>();
         for(Item i:items) {
             listItems.add(i);

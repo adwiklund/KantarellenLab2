@@ -20,6 +20,7 @@ public class RecipeItemAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
+        public TextView amountTextView;
         //public Button messageButton;
 
         // We also create a constructor that accepts the entire item row
@@ -30,14 +31,17 @@ public class RecipeItemAdapter extends
             super(itemView);
 
             nameTextView = (TextView) itemView.findViewById(R.id.item_name);
+            amountTextView = (TextView) itemView.findViewById(R.id.item_amount);
             //messageButton = (Button) itemView.findViewById(R.id.message_button);
         }
     }
 
     private ArrayList<String> mItems;
+    private ArrayList<String> mAmounts;
 
-    public RecipeItemAdapter(ArrayList<String> items) {
+    public RecipeItemAdapter(ArrayList<String> items, ArrayList<String> amounts) {
         mItems = items;
+        mAmounts = amounts;
     }
 
     @NonNull
@@ -58,11 +62,14 @@ public class RecipeItemAdapter extends
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data model based on position
         String item = mItems.get(position);
+        String amount = mAmounts.get(position);
 
         // Set item views based on your views and data model
         TextView textView = holder.nameTextView;
+        TextView amountView = holder.amountTextView;
         //textView.setText(item.getItemName());
         textView.setText(item);
+        amountView.setText(amount);
         /*
         Button button = holder.messageButton;
         button.setText(contact.isOnline() ? "Message" : "Offline");

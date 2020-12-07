@@ -65,6 +65,7 @@ public class RecipeActivity extends AppCompatActivity {
     Realm realm;
     byte[] byteArray;
     private ArrayList<String> items;
+    private ArrayList<String> amounts;
 
     private GridView gridView;
     RealmList<Item> recipeItems;
@@ -133,9 +134,15 @@ public class RecipeActivity extends AppCompatActivity {
                 recipeItems = recipe.getItems();
 
                 items = new ArrayList<>();
+                amounts = new ArrayList<>();
+
+                for(int i = 0; i < recipeItems.size(); i++) {
+                    items.add(recipeItems.get(i).getItemName());
+                    amounts.add(recipeItems.get(i).getAmount());
+                }
 
                 //RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
-                RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
+                RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items, amounts);
 
                 btnAddIngredient.setOnClickListener(new View.OnClickListener() {
                    @Override
@@ -493,6 +500,7 @@ public class RecipeActivity extends AppCompatActivity {
                         });
                 //helper.save(i);
                 items.add(i.getItemName());
+                amounts.add(i.getAmount());
                 nameEditTxt.setText("");
                 amountEditTxt.setText("");
 
