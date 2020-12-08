@@ -92,31 +92,11 @@ public class MainActivity extends AppCompatActivity {
                 shoppingList = realm.createObject(ShoppingList.class, 1);
             });
         }
-        /*
-        if(shoppingList.getId() != 1) {
-            realm.executeTransaction(r -> {
-                shoppingList = realm.createObject(ShoppingList.class, 1);
-            });
-        }
-
-         */
-
-        /*
-        RealmList<Item> tempList = new RealmList<>();
-        realm.executeTransaction(r -> {
-                    shoppingList.setItems(tempList);
-                });
-
-         */
 
         helper = new RealmHelper(realm);
         helper.fillShoppingList(shoppingList);
         items = helper.retrieveItemNames();
         amounts = helper.retrieveItemAmounts();
-
-
-        //RealmResults<Item> realmItems = realm.where(Item.class).findAll();
-        //shoppingList.setItems(realmItems);
 
         shoppingListAdapter = new ShoppingListAdapter(this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
@@ -222,17 +202,6 @@ public class MainActivity extends AppCompatActivity {
         d.show();
     }
 
-    /*
-    private void setItemCategory(Category category, Item item) {
-        realm.executeTransaction(r -> {
-            item.setCategory(category);
-        });
-        shoppinglist.add(item.getItemName());
-    }
-
-     */
-
-
     public void setupCategories() {
 
         ArrayList<String> categoryList = new ArrayList<>();
@@ -258,22 +227,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
-/*
-        realm.executeTransaction(r -> {
-            if(r.isEmpty()) {
-                for(int i = 0; i < categoryList.size(); i++) {
-                    System.out.println("here2");
-                    Category category = r.createObject(Category.class, i);
-                    category.setCategoryName(categoryList.get(i));
-                    category.setPosition(i);
-                }
-            }
-
-        });
-
- */
-
     }
 
     @Override

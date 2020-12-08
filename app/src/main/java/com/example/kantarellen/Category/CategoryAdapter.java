@@ -69,32 +69,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
         //realm = Realm.getDefaultInstance();
         RealmResults<Category> categories = realm.where(Category.class).findAll();
 
-
-
-        //System.out.println("position before = " + categories.get(fromPosition).getPosition());
-        //System.out.println("position before = " + categories.get(toPosition).getPosition());
-        /*
-        realm.executeTransaction(r -> {
-            final Category cat1 = realm.where(Category.class).equalTo("position", fromPosition).findFirst();
-            final Category cat2 = realm.where(Category.class).equalTo("position", toPosition).findFirst();
-            System.out.println("cat1 Pos = " + cat1.getPosition());
-            System.out.println("cat2 Pos = " + cat2.getPosition());
-            cat1.setPosition(toPosition);
-            cat2.setPosition(fromPosition);
-            /*
-            categories.get(toPosition).setPosition(fromPosition);
-            categories.get(fromPosition).setPosition(toPosition);
-            realm.copyToRealmOrUpdate(categories);
-
-             */
-        //});
-
-        //System.out.println("position after = " + categories.get(fromPosition).getPosition());
-        //System.out.println("position after = " + categories.get(toPosition).getPosition());
-
-        //Category category1;
-        //Category category2;
-
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
                 Collections.swap(data, i, i + 1);
@@ -110,45 +84,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
             }
         }
-        /*
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute (Realm realm) {
-                Category cat1 = realm.where(Category.class).equalTo("position", fromPosition).findFirst();
-                if(cat1 == null) {
-                    cat1 = realm.createObject(Category.class, fromPosition);
-                }
-                cat1.setPosition(toPosition);
-
-                Category cat2 = realm.where(Category.class).equalTo("position", toPosition).findFirst();
-                if(cat2 == null) {
-                    cat2 = realm.createObject(Category.class, toPosition);
-                }
-                cat2.setPosition(fromPosition);
-            }
-        });
-
-         */
-
-        /*
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Number number = categories.max("id");
-                //RealmResults<Item> items = realm.where(Item.class).contains("category", i)
-                for(int i = 0; i < number.intValue(); i++) {
-                    //RealmResults<Item> items = realm.where(Item.class).contains("category", categories.get(i).getCategoryName()).findAll();
-
-
-                    categories.get(i).setCategoryName(data.get(i));
-
-
-                }
-            }
-        });
-
-         */
-
         notifyItemMoved(fromPosition, toPosition);
     }
 

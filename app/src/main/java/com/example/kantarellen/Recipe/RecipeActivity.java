@@ -118,17 +118,6 @@ public class RecipeActivity extends AppCompatActivity {
 
                 imageView.setImageBitmap(bitmap);
 
-                /*
-                recipe.setInstructions("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-                        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
-                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
-                        "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
-                        "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
-                        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia " +
-                        "deserunt mollit anim id est laborum.");
-
-                 */
-
                 instructionTextView.setText(recipe.getInstructions());
 
                 recipeItems = recipe.getItems();
@@ -151,57 +140,9 @@ public class RecipeActivity extends AppCompatActivity {
                    }
                 });
 
-                /*
-                //RecyclerView rvItems = (RecyclerView) findViewById(R.id.rvItems);
-                Item item0 = new Item();
-                item0.setItemName("Smör");
-                //item0.setId(0);
-                item0.setId(realm);
-                items.add(item0.getItemName());
-                Item item1 = new Item();
-                item1.setItemName("Mjölk");
-                //item1.setId(1);
-                item1.setId(realm);
-                items.add(item1.getItemName());
-                Item item2 = new Item();
-                item2.setItemName("Vetemjöl");
-                item2.setId(realm);
-                //item2.setId(2);
-                items.add(item2.getItemName());
-                Item item3 = new Item();
-                item3.setItemName("Jäst");
-                item3.setId(realm);
-                //item3.setId(3);
-                items.add(item3.getItemName());
-
-                 */
-
-                //RecipeItemAdapter itemAdapter = new RecipeItemAdapter(items);
-
                 rvItems.setAdapter(itemAdapter);
                 rvItems.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
 
-                /*
-                instructionTextView.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, " +
-                        "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " +
-                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi " +
-                        "ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit " +
-                        "in voluptate velit esse cillum dolore eu fugiat nulla pariatur. " +
-                        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia " +
-                        "deserunt mollit anim id est laborum.");
-
-                 */
-
-                //btnContinue.setText("string");
-
-                /*
-                btnCancle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // TODO: 7/5/18 your click listener
-                    }
-                });
-                */
                 btnAddToList.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -212,64 +153,6 @@ public class RecipeActivity extends AppCompatActivity {
                             helper.save(i);
                         }
 
-                        /*
-
-                        Item i0 = new Item();
-                        i0.setItemName(item0.getItemName());
-                        i0.setAmount("100 g");
-                        i0.setId(realm);
-                        helper.save(i0);
-                        Item i1 = new Item();
-                        i1.setItemName(item1.getItemName());
-                        i1.setAmount("1 liter");
-                        i1.setId(realm);
-                        helper.save(i1);
-                        Item i2 = new Item();
-                        i2.setItemName(item2.getItemName());
-                        i2.setAmount("8 dl");
-                        i2.setId(realm);
-                        helper.save(i2);
-                        Item i3 = new Item();
-                        i3.setItemName(item3.getItemName());
-                        i3.setAmount("50g");
-                        i3.setId(realm);
-                        helper.save(i3);
-
-                         */
-
-
-                        /*
-                        helper.save(item0);
-                        helper.save(item1);
-                        helper.save(item2);
-                        helper.save(item3);
-
-                         */
-
-                        /*
-                        assert shoppingList != null;
-                        RealmList<Item> realmItems = shoppingList.getItems();
-                        realm.executeTransaction(r -> {
-
-
-
-                            realmItems.add(0, item0);
-                            realmItems.add(1, item1);
-                            realmItems.add(2, item2);
-                            realmItems.add(3, item3);
-                            shoppingList.setItems(realmItems);
-                        });
-
-                         */
-                        /*
-                        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
-                        RealmList<Item> shoppingListItems = shoppingList.getItems();
-                        for(int i = 0; i < items.size(); i++) {
-                            //shoppingListItems.add(items.get(i));
-                        }
-
-                         */
-
                     }
                 });
 
@@ -279,7 +162,6 @@ public class RecipeActivity extends AppCompatActivity {
                 alertDialogCongratulations.show();
                 alertDialogCongratulations.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);//
 
-                //Toast.makeText(RecipeActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -301,12 +183,7 @@ public class RecipeActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         m_Text = input.getText().toString();
-                        //listRecipe.add(m_Text);
                         imagePicker();
-
-
-                        //System.out.println("byteArray here = " + byteArray);
-                        //addRecipe(m_Text, byteArray);
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -372,11 +249,6 @@ public class RecipeActivity extends AppCompatActivity {
 
                     System.out.println("recipe = " + recipes.get(i).getName());
 
-                    //byte[] bytes = Base64.decode(recipes.get(i).getImage(), Base64.DEFAULT);
-                    //Bitmap bitmap = createBitmap(bytes);
-                    //Bitmap bitmap = createBitmap(recipes.get(i).getImage());
-
-
                     Bitmap bitmap = BitmapFactory.decodeByteArray(recipes.get(i).getImage(), 0, recipes.get(i).getImage().length);
                     bitmap = rotateImage(90, bitmap);
 
@@ -406,36 +278,22 @@ public class RecipeActivity extends AppCompatActivity {
 
         realm.executeTransaction(r -> {
             Recipe recipe = r.createObject(Recipe.class, listRecipe.size() + 1);
-            //recipe.setId(listRecipe.size() + 1);
             recipe.setName(name);
-            //String encodeImage = Base64.encodeToString(imageId, Base64.DEFAULT);
             recipe.setImage(imageId);
-            //recipe.setImage(encodeImage);
 
             String testInstructions = "Test Instructions";
             recipe.setInstructions(testInstructions);
 
             listRecipe.add(name);
 
-            //Bitmap bitmap = BitmapFactory.decodeByteArray(imageId, 0, imageId.length);
-            System.out.println("bitmapData = " + imageId);
-            System.out.println("BitmapData length = " + imageId.length);
-
-            //byte[] bytes = Base64.decode(imageId, Base64.DEFAULT);
-            //Bitmap bitmap = createBitmap(bytes);
-
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageId, 0, imageId.length);
 
             bitmap = rotateImage(90, bitmap);
 
-            //Bitmap bitmap = createBitmap(imageId);
             listRecipePicture.add(bitmap);
 
             listRecipeInstructions.add(testInstructions);
 
-            //ShoppingList newShopList = r.createObject(ShoppingList.class, 1);
-            //RealmList<Item> list = new RealmList<>();
-            //newShopList.setItems(list);
         });
 
     }
@@ -503,19 +361,6 @@ public class RecipeActivity extends AppCompatActivity {
                 amounts.add(i.getAmount());
                 nameEditTxt.setText("");
                 amountEditTxt.setText("");
-
-                /*
-                //REFRESH
-                items = helper.retrieveItemNames();
-                amounts = helper.retrieveItemAmounts();
-                categoryList = helper.retrieveCategories();
-                shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
-                categoryAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, categoryList);
-                rv.setAdapter(shoppingListAdapter);
-                categorySpinner.setAdapter(categoryAdapter);
-
-                 */
-
 
             }
         });

@@ -70,12 +70,7 @@ public class RecipeItemAdapter extends
         //textView.setText(item.getItemName());
         textView.setText(item);
         amountView.setText(amount);
-        /*
-        Button button = holder.messageButton;
-        button.setText(contact.isOnline() ? "Message" : "Offline");
-        button.setEnabled(contact.isOnline());
 
-         */
     }
 
     @Override
