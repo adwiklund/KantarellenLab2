@@ -107,6 +107,7 @@ public class RecipeActivity extends AppCompatActivity {
                 Button btnAddIngredient = view.findViewById(R.id.btnAddIngredient);
                 TextView instructionTextView = view.findViewById(R.id.instructionTextView);
                 //ImageView btnCancle = view.findViewById(R.id.btnCancle);
+                Button btnEditInstructions = view.findViewById(R.id.btnEditInstructions);
                 Button btnAddToList = view.findViewById(R.id.btnAddToList);
 
                 Recipe recipe = realm.where(Recipe.class).equalTo("id", position+1).findFirst();
@@ -142,6 +143,16 @@ public class RecipeActivity extends AppCompatActivity {
 
                 rvItems.setAdapter(itemAdapter);
                 rvItems.setLayoutManager(new LinearLayoutManager(RecipeActivity.this));
+
+                btnEditInstructions.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        instructionTextView.setCursorVisible(true);
+                        instructionTextView.setFocusableInTouchMode(true);
+                        instructionTextView.setInputType(InputType.TYPE_CLASS_TEXT);
+                        instructionTextView.requestFocus();
+                    }
+                });
 
                 btnAddToList.setOnClickListener(new View.OnClickListener() {
                     @Override
