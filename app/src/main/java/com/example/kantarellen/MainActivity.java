@@ -9,10 +9,12 @@ import com.example.kantarellen.Category.CategoryActivity;
 import com.example.kantarellen.Recipe.RecipeActivity;
 import com.example.kantarellen.ShoppingList.ShoppingList;
 import com.example.kantarellen.ShoppingList.ShoppingListAdapter;
+import com.example.kantarellen.ShoppingList.SwipeToDeleteCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -100,6 +102,14 @@ public class MainActivity extends AppCompatActivity {
 
         shoppingListAdapter = new ShoppingListAdapter(this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
+
+        /*
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(shoppingListAdapter));
+        itemTouchHelper.attachToRecyclerView(rv);
+
+         */
+
+
 
         setupCategories();
 

@@ -21,10 +21,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Name"
             android:id="@+id/nameTxt"
-            android:padding="10dp"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
+            android:padding="0dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000000"
+            android:textSize="20dp"
             android:layout_alignParentLeft="true"
+            android:clickable="true"
+            android:focusable="true"
             />
 
         <TextView
@@ -34,10 +37,12 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Name"
             android:id="@+id/amountTxt"
-            android:padding="10dp"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold"
+            android:padding="0dp"
+            android:textColor="#000000"
+            android:textSize="20dp"
             android:layout_alignParentLeft="true"
+            android:clickable="true"
+            android:focusable="true"
             />
 
 
