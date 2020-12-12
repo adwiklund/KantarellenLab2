@@ -2,6 +2,7 @@ package com.example.kantarellen;
 
 import com.example.kantarellen.Category.Category;
 import com.example.kantarellen.Item;
+import com.example.kantarellen.Recipe.Recipe;
 import com.example.kantarellen.ShoppingList.ShoppingList;
 
 import java.util.ArrayList;
@@ -89,6 +90,16 @@ public class RealmHelper {
         }
 
         return categories;
+    }
+
+    public ArrayList<String> retrieveInstructions() {
+        ArrayList<String> instructions = new ArrayList<>();
+        RealmResults<Recipe> realmRecipes = realm.where(Recipe.class).findAll();
+
+        for(Recipe r: realmRecipes) {
+            instructions.add(r.getInstructions());
+        }
+        return instructions;
     }
 
     //DELETE

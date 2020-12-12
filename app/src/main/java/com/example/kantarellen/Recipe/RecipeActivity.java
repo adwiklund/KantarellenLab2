@@ -36,9 +36,8 @@ import com.example.kantarellen.Item;
 import com.example.kantarellen.MainActivity;
 import com.example.kantarellen.R;
 import com.example.kantarellen.RealmHelper;
-import com.example.kantarellen.ShoppingList.ShoppingList;
-import com.example.kantarellen.ShoppingList.ShoppingListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -57,7 +56,7 @@ public class RecipeActivity extends AppCompatActivity {
     /** Called when the activity is first created. */
 
 
-    private RecipeAdapter mAdapter;
+    private RecipeAdapter recipeAdapter;
     private ArrayList<String> listRecipe;
     private ArrayList<Bitmap> listRecipePicture;
     private ArrayList<String> listRecipeInstructions;
@@ -81,11 +80,11 @@ public class RecipeActivity extends AppCompatActivity {
         prepareList();
 
         // prepared arraylist and passed it to the Adapter class
-        mAdapter = new RecipeAdapter(this, listRecipe, listRecipePicture);
+        recipeAdapter = new RecipeAdapter(this, listRecipe, listRecipePicture);
 
         // Set custom adapter to gridview
         gridView = (GridView) findViewById(R.id.gridView1);
-        gridView.setAdapter(mAdapter);
+        gridView.setAdapter(recipeAdapter);
 
         // Implement On Item click listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -147,10 +146,7 @@ public class RecipeActivity extends AppCompatActivity {
                 btnEditInstructions.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        instructionTextView.setCursorVisible(true);
-                        instructionTextView.setFocusableInTouchMode(true);
-                        instructionTextView.setInputType(InputType.TYPE_CLASS_TEXT);
-                        instructionTextView.requestFocus();
+                        displayInstructionDialog(position, instructionTextView);
                     }
                 });
 
@@ -292,7 +288,7 @@ public class RecipeActivity extends AppCompatActivity {
             recipe.setName(name);
             recipe.setImage(imageId);
 
-            String testInstructions = "Test Instructions";
+            String testInstructions = "Instructions";
             recipe.setInstructions(testInstructions);
 
             listRecipe.add(name);
@@ -314,6 +310,35 @@ public class RecipeActivity extends AppCompatActivity {
         matrix.postRotate(angle);
         return Bitmap.createBitmap(bitmapSrc, 0, 0,
                 bitmapSrc.getWidth(), bitmapSrc.getHeight(), matrix, true);
+    }
+
+    private void displayInstructionDialog(int position, TextView instructionTextView) {
+        Dialog d = new Dialog(this);
+        d.setTitle("Ändra Instruktioner");
+        d.setContentView(R.layout.recipe_instruction_dialog);
+
+        TextInputEditText instructionEditTxt = (TextInputEditText) d.findViewById(R.id.instructionEditText);
+        Button saveBtn = (Button) d.findViewById(R.id.saveBtn);
+
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //GET DATA
+                Recipe recipe = realm.where(Recipe.class).equalTo("id", position + 1).findFirst();
+                realm.executeTransaction(r -> {
+                    recipe.setInstructions(instructionEditTxt.getText().toString());
+                });
+
+                listRecipeInstructions.remove(position);
+                listRecipeInstructions.add(instructionEditTxt.getText().toString());
+
+                instructionTextView.setText(instructionEditTxt.getText().toString());
+
+                d.dismiss();
+            }
+        });
+
+        d.show();
     }
 
     private void displayInputDialog()

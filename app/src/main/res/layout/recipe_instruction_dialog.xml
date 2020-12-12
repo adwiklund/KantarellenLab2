@@ -9,44 +9,26 @@
 
         android:orientation="vertical"
         android:paddingLeft="15dp"
-        android:paddingTop="0dp"
+        android:paddingTop="5dp"
         android:paddingRight="15dp">
 
+
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameLayout"
+            android:id="@+id/instructionLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/nameEditText"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/instructionEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Vara"
+                android:hint="Instruktioner"
+                android:lines="10"
+                android:maxLines="10"
+                android:minLines="6"
                 android:singleLine="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/amountLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/amountEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Mängd"
-                android:singleLine="true" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <Spinner
-            android:id="@+id/categorySpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
-
 
         <Button
             android:id="@+id/saveBtn"
