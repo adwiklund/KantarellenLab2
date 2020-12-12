@@ -77,6 +77,13 @@ public class ShoppingListAdapter extends RecyclerView.Adapter<MyViewHolder>{
         notifyItemRemoved(position);
     }
 
+    public ArrayList<String> getNames() {
+        return items;
+    }
+    public ArrayList<String> getAmounts() {
+        return amounts;
+    }
+
     /*
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {

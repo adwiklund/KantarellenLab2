@@ -2,6 +2,7 @@ package com.example.kantarellen;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.kantarellen.Category.Category;
@@ -11,7 +12,9 @@ import com.example.kantarellen.ShoppingList.ShoppingList;
 import com.example.kantarellen.ShoppingList.ShoppingListAdapter;
 import com.example.kantarellen.ShoppingList.SwipeToDeleteCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -102,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
 
         shoppingListAdapter = new ShoppingListAdapter(this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
+
+        enableSwipeToDeleteAndUndo();
 
         /*
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new SwipeToDeleteCallback(shoppingListAdapter));
@@ -205,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
                 rv.setAdapter(shoppingListAdapter);
                 categorySpinner.setAdapter(categoryAdapter);
 
-
             }
         });
 
@@ -248,6 +252,42 @@ public class MainActivity extends AppCompatActivity {
         shoppingListAdapter = new ShoppingListAdapter(MainActivity.this, items, amounts);
         rv.setAdapter(shoppingListAdapter);
     }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+
+
+                final int position = viewHolder.getAdapterPosition();
+                final String itemName = shoppingListAdapter.getNames().get(position);
+                final String itemAmounts = shoppingListAdapter.getAmounts().get(position);
+
+                shoppingListAdapter.deleteItem(position);
+                /*
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        mAdapter.restoreItem(item, position);
+                        recyclerView.scrollToPosition(position);
+                    }
+                });
+
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+
+                 */
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(rv);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
