@@ -318,13 +318,14 @@ public class RecipeActivity extends AppCompatActivity {
         d.setContentView(R.layout.recipe_instruction_dialog);
 
         TextInputEditText instructionEditTxt = (TextInputEditText) d.findViewById(R.id.instructionEditText);
+        Recipe recipe = realm.where(Recipe.class).equalTo("id", position + 1).findFirst();
+        instructionEditTxt.setText(recipe.getInstructions());
         Button saveBtn = (Button) d.findViewById(R.id.saveBtn);
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //GET DATA
-                Recipe recipe = realm.where(Recipe.class).equalTo("id", position + 1).findFirst();
                 realm.executeTransaction(r -> {
                     recipe.setInstructions(instructionEditTxt.getText().toString());
                 });

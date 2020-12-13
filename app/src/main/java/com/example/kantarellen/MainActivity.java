@@ -88,8 +88,18 @@ public class MainActivity extends AppCompatActivity {
         RealmConfiguration config = new RealmConfiguration.Builder().allowWritesOnUiThread(true).build();
         //Realm.deleteRealm(config);
 
+
         realm = Realm.getInstance(config);
         //realm = Realm.getDefaultInstance();
+
+        /*
+        RealmResults<Item> tempItems = realm.where(Item.class).findAll();
+        realm.executeTransaction(r -> {
+            tempItems.deleteAllFromRealm();
+        });
+
+         */
+
 
         shoppingList = realm.where(ShoppingList.class).findFirst();
         if(shoppingList == null) {

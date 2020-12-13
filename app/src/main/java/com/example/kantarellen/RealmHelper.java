@@ -71,7 +71,9 @@ public class RealmHelper {
     public ArrayList<String> retrieveItemAmounts()
     {
         ArrayList<String> itemAmounts=new ArrayList<>();
-        RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
+        ShoppingList shoppingList = realm.where(ShoppingList.class).findFirst();
+        RealmResults<Item> items = shoppingList.getItems().sort("category.position");
+        //RealmResults<Item> items=realm.where(Item.class).sort("category.position").findAll();
 
         for(Item i:items)
         {
